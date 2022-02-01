@@ -58,9 +58,10 @@ const routes = [
     component:EditProfile
   },
   {
-    path:'/viewpost',
+    path:'/viewpost/:id',
     name:'ViewPost',
-    component:ViewPost
+    component:ViewPost,
+    props:true
   },
   {
     path: '/about',

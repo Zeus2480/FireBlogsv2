@@ -23,7 +23,8 @@
             </v-carousel>
          </v-app>
       </div>
-      <div class="tab tw-mx-10">
+      <div>
+         <div class="tab tw-mx-10">
          <v-tabs color="deep-purple accent-4"  right v-model="tab">
             <div class="tw-flex  tw-justify-between">
                <div class="tw-flex">
@@ -112,6 +113,8 @@
             </v-tabs>
          </div> -->
       </div>
+      </div>
+      
       <Footer></Footer>
    </div>
 </template>

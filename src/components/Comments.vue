@@ -19,7 +19,7 @@
             
                <v-menu offset-y absolute="true">
                   <template v-slot:activator="{ on, attrs }">
-                     <v-btn v-bind="attrs" v-on="on">
+                     <v-btn depressed color="#fff" v-bind="attrs" v-on="on">
                         <img
                            src="../assets/Logo/3-horizontal-dots.png"
                            class="tw-h-1"
@@ -29,7 +29,7 @@
                   </template>
                   <v-list>
                      <v-list-item >
-                        <v-list-item-title><v-btn>
+                        <v-list-item-title><v-btn depressed color="#fff">
                         Report</v-btn></v-list-item-title>
                      </v-list-item>
                   </v-list>

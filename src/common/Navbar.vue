@@ -111,7 +111,7 @@
                   </li>
                   <li class="link-item">
                      <router-link
-                        to="blogs"
+                        to="/blogs"
                         class="tw-text-white t tw-no-underline"
                         >Blogs</router-link
                      >

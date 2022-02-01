@@ -1,5 +1,5 @@
 <template>
-   <div class="tw-flex tw-w-full tw-items-center tw-border-2 tw-border-white tw-mb-4 focus:tw-cursor-pointer hover:tw-border-black " style="height:140px">
+   <div @click="open" class="tw-flex tw-w-full tw-items-center tw-border-2 tw-border-white tw-mb-4 tw-cursor-pointer hover:tw-border-black " style="height:140px">
       <div class="content tw-flex-1 tw-px-4 tw-py-2 tw-flex-col">
          <div class="username tw-flex tw-mt-4">
             <img
@@ -36,3 +36,12 @@
       </div>
    </div>
 </template>
+<script>
+export default {
+   methods:{
+      open(){
+         this.$router.push('/viewpost/id')
+      }
+   }
+}
+</script>

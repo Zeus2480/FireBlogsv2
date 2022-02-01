@@ -44,7 +44,7 @@
          </div>
          <div class="tw-w-1/4 tw-bg-white"></div>
       </div>
-      <div class="tw-flex tw-w-screen">
+      <div class="tw-flex tw-w-screen tw-h-full">
          <div class="content tw-w-3/4 tw-h-full">
             <div class="tw-pl-14 tw-pt-10 tw-mt-10 tw-pr-4">
                <h1 class="tw-text-5xl tw-font-semibold">Ode To tenhood</h1>
@@ -61,7 +61,7 @@
                      <h1 class="tw-text-sm tw-opacity-75">21 Jan 2021</h1>
                   </div>
                </div>
-               <div class="tw-flex">
+               <div class="tw-flex tw-mb-20">
                   <p class="tw-breal-all">
                      There’s this Sylvia Plath poem called Mad Girl’s Love Song.
                      It might just be the epitome of teen romance, but alas,
@@ -232,6 +232,19 @@
                   <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser>
+                  <!-- <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser></MoreFromUser> -->
                   
                </div>
             </div>
