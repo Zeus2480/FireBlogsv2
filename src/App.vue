@@ -1,13 +1,25 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      
-    </div>
-    <router-view/>
-  </div>
+<v-app>
+      <router-view></router-view>
+
+</v-app>
+
+    
+
+   
 </template>
 
 <style>
+.v-application--wrap {
+  min-height: unset !important;
+}
+.v-application a{
+  color: unset !important;
+}
+#app{
+  text-align: unset !important;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
