@@ -26,11 +26,20 @@
                         <h1 class="tw-font-semibold tw-text-xl">Hey Faizan</h1>
                      </div>
                      <div class="tw-flex-col tw-flex tw-w-full tw-items-center">
+                        <div v-if="adminCheck"
+                           class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
+                        >
+                           <router-link
+                              to="/adminpanel"
+                              class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
+                              >Admin Panel</router-link
+                           >
+                        </div>
                         <div
                            class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
                         >
                            <router-link
-                              to="EditProfile"
+                              :to="{ name: 'EditProfile' }"
                               class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
                               >Edit Profile</router-link
                            >
@@ -39,7 +48,7 @@
                            class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
                         >
                            <router-link
-                              to="Createblog"
+                              :to="{ name: 'Createblog' }"
                               class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
                               >Create Blog</router-link
                            >
@@ -48,36 +57,33 @@
                            class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
                         >
                            <router-link
-                              to="#"
+                              :to="{
+                                 name: 'Profile',
+                                 params: { edit: true },
+                              }"
                               class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
-                              >Statistics</router-link
+                              >Profile</router-link
+                           >
+                        </div>
+
+                        <div
+                           class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
+                        >
+                           <router-link
+                              :to="{ name: 'bookmark' }"
+                              class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
+                              >Bookmarks</router-link
                            >
                         </div>
                         <div
                            class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
                         >
-                           <router-link
-                              to="#"
-                              class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
-                              >Reading List</router-link
-                           >
-                        </div>
-                        <div
-                           class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
-                        >
-                           <router-link
-                              to="#"
-                              class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-nav-sec-hover tw-px-full tw-bg-nav-sec tw-text-base tw-font-medium"
-                              >Following</router-link
-                           >
-                        </div>
-                        <div
-                           class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
-                        >
-                           <router-link
-                              to="#"
+                           <v-btn
+                              @click="logout"
+                              color="red darken-4"
+                              dark
                               class="tw-rounded-md tw-w-full tw-text-center tw-py-2 hover:tw-bg-red-500 tw-px-full tw-bg-red-600 tw-text-base tw-font-medium"
-                              >Logout</router-link
+                              >Logout</v-btn
                            >
                         </div>
                      </div>
@@ -100,11 +106,11 @@
             <div class="logo-image tw-mx-6 tw-py-1 tw-h-10">
                <img src="../assets/Logo/meteor.png" alt="" class="tw-h-full" />
             </div>
-            <div class="nav-buttons tw-mr-2 tw-flex tw-items-center tw-pt-2">
-               <ul class="tw-list-none tw-flex">
-                  <li class="link-item">
+            <div class="nav-buttons tw-h-full tw-my-auto tw-mr-4 tw-flex tw-items-center   ">
+               <ul class="tw-list-none tw-h-full tw-my-auto tw-flex tw-items-center">
+                  <li class="link-item ">
                      <router-link
-                        to="home"
+                        to="/home"
                         class="tw-text-white tw-no-underline"
                         >Home</router-link
                      >
@@ -116,14 +122,14 @@
                         >Blogs</router-link
                      >
                   </li>
-                  <!-- <li class="link-item">
-                  <router-link
-                     to="login"
-                     class="tw-text-white tw-no-underline d"
-                     >Login</router-link
-                  >
-               </li> -->
-                  <li class="link-item">
+                  <li v-if="!userName" class="link-item">
+                     <router-link
+                        to="/login"
+                        class="tw-text-white tw-no-underline d"
+                        >Login</router-link
+                     >
+                  </li>
+                  <li v-if="userName" class="link-item tw-pt-2">
                      <button @click.stop="drawer = !drawer">
                         <img
                            src="../assets/images/profilepicture.jpg"
@@ -139,15 +145,83 @@
    </v-app>
 </template>
 <script>
+import axios from "axios";
 export default {
    data() {
       return {
          drawer: null,
-         items: [
-            { title: "Home", icon: "mdi-view-dashboard" },
-            { title: "About", icon: "mdi-forum" },
-         ],
+         userLoggedIn: null,
+         userName: "",
+         userId: "",
+         admin: false,
       };
+   },
+   created() {
+      this.getProfile();
+   },
+   computed: {
+      adminCheck() {
+         if (this.userId === 1) {
+            return true;
+         }
+         return false;
+      },
+   },
+   methods: {
+      logout() {
+         axios.post(
+            "/logout",
+            {},
+            {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            }
+         ).then(res=>{
+            console.log(res);
+            localStorage.removeItem("token");
+            this.drawer=false;
+            this.$router.go()
+            
+
+         });
+      },
+      getProfile() {
+         if (this.$store.getters.userName === "") {
+            if (localStorage.getItem("token")) {
+               axios
+                  .post(
+                     "/profile",
+                     {},
+                     {
+                        headers: {
+                           Authorization:
+                              "Bearer " + localStorage.getItem("token"),
+                        },
+                     }
+                  )
+                  .then((res) => {
+                     console.log(res);
+                     this.userLoggedIn = true;
+                     this.userName = res.data.name;
+                     this.userId = res.data.id;
+                     if (res.data.id === 1) {
+                        this.admin = true;
+                     }
+                     this.$store.dispatch("setUserName", {
+                        userName: this.userName,
+                     });
+                     this.$store.dispatch("setUserId", {
+                        userId: this.userId,
+                     });
+                  });
+            }
+         } else {
+            this.userName = this.$store.getters.userName;
+            this.userId = this.$store.getters.userId;
+            this.userLoggedIn = true;
+         }
+      },
    },
 };
 </script>
@@ -161,11 +235,11 @@ export default {
    margin: 1rem;
 }
 .link-item a {
-   margin-top:2px;
+   margin-top: 2px;
    padding: 6px 8px 8px 8px;
    font-weight: 600;
 }
-.v-application a{
+.v-application a {
    color: #fff !important;
 }
 </style>

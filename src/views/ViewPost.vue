@@ -145,7 +145,7 @@
             class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-black tw-fixed tw-right-0"
          >
             <div class="tw-relative">
-               <div class="tw-absolute tw-z-50 tw-h-full tw-right-0">
+               <div class="tw-absolute tw-z-50 tw-h-full tw-right-4 ">
                   <v-alert
                      v-if="followAlert"
                      class="tw-w-96"
@@ -224,7 +224,7 @@
                         class="tw-h-5 tw-mr-2"
                   /></a>
                </div>
-               <div class="more-from-user">
+               <div class="more-from-user tw-mr-2">
                   <h1 class="tw-font-semibold tw-text-xl">
                      More From Olivia Fendrich
                   </h1>
@@ -262,20 +262,21 @@
             <div>
                <h1 class="tw-text-xl tw-font-semibold">Responses (10)</h1>
             </div>
-            <div class="tw-flex tw-my-4">
+            <div class=" tw-my-4">
                <textarea
                   name=""
                   placeholder="What are your thoughts?"
-                  class="tw-bg-gray-100 tw-py-1 tw-px-2 tw-rounded-lg tw-border-2 tw-border-gray-400 tw-border-solid"
+                  class="tw-bg-gray-100 tw-py-1 tw-px-2 tw-mx-2 tw-rounded-lg tw-border-2 tw-border-gray-400 tw-border-solid"
                   id=""
-                  cols="30"
-                  rows="3"
+                  cols="39"
+                  rows="4"
                ></textarea>
                <div class="tw-flex tw-items-center">
                   <v-btn
                      dark
                      color="#2A73C5"
-                     class="tw-flex tw-items-center tw-ml-2"
+                     block
+                     class="tw-flex  tw-items-center tw-ml-2"
                      >Comment</v-btn
                   >
                </div>

@@ -9,6 +9,8 @@ import AdminPanel from '../views/AdminPanel.vue'
 import CreateBlog from '../views/CreateBlog.vue'
 import EditProfile from '../views/EditProfile.vue'
 import ViewPost from '../views/ViewPost.vue'
+import Profile from '../views/Profile.vue'
+import Bookmarks from '../views/Bookmarks.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -20,6 +22,17 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/bookmark',
+    name: 'bookmark',
+    component: Bookmarks
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    props:true
   },
   
   {
@@ -38,9 +51,10 @@ const routes = [
     component:Register
   },
   {
-    path:'/serach',
+    path:'/search',
     name:'search',
-    component:Search
+    component:Search,
+    props:true
   },
   {
     path:'/adminpanel',

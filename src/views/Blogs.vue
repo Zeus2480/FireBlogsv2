@@ -25,7 +25,7 @@
       </div>
       <div>
          <div class="tab tw-mx-10">
-         <v-tabs color="deep-purple accent-4"  right v-model="tab">
+         <v-tabs color="blaack accent-4"  right v-model="tab">
             <div class="tw-flex  tw-justify-between">
                <div class="tw-flex">
                   <v-tab href="#recommended" dark class="tw-text-black" >Recommended For You</v-tab>
@@ -40,9 +40,11 @@
                         type="search"
                         name="search"
                         placeholder="Search"
+                        v-model.trim="query"
                      />
                      <button
                         type="submit"
+                        @click="search"
                         class="tw-absolute tw-right-0 tw-top-0 tw-mt-5 tw-mr-4"
                      >
                         <svg
@@ -135,12 +137,20 @@ export default {
             "deep-purple accent-4",
          ],
          tab: "tab-1",
+         query:''
       };
    },
    methods: {
       changeTab() {
          this.tab = "recommended";
       },
+      search(){
+         console.log(this.query)
+         this.$router.push({
+                  name: "search",
+                  params: { query:this.query },
+               });
+      }
    },
 };
 </script>

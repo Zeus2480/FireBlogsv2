@@ -15,6 +15,7 @@
                <div class="tw-flex tw-items-center">
                   <v-btn
                      dark
+                     small
                      color="#2A73C5"
                      class="tw-flex tw-items-center tw-ml-6"
                      >Edit Profile Picture</v-btn
