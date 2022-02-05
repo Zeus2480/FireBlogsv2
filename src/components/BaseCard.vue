@@ -7,11 +7,11 @@
          <div class="tw-px-4 tw-pt-2">
             <div class="title tw-h-16 tw-mx-auto">
                <h2 class="tw-text-white tw-pt-3 tw-truncate tw-mx-auto">
-                  This is the title for this carddd d dsfsd
+                  {{ title }}
                </h2>
             </div>
             <img
-               src="../assets/images/wallpaperflare 4.png"
+               :src="imageUrl"
                class=""
                style="height: 160px; width: 302px"
                alt=""
@@ -48,17 +48,31 @@
             </div>
          </div> -->
          <div class="tw-absolute tw-bottom-6 tw-right-8">
-            <div >
+            <div>
                <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="290">
                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                           dark
-                           small
-                           color="primary"
-                           class="tw-static tw-mx-2"
-                           >Edit</v-btn
+                        <router-link
+                           :to="{
+                              name: 'editblog',
+                              params: {
+                                 title: title,
+                                 body: body,
+                                 summary: summary,
+                                 id: id,
+                                 img: img,
+                                 preview:true
+                              },
+                           }"
                         >
+                           <v-btn
+                              dark
+                              small
+                              color="primary"
+                              class="tw-static tw-mx-2"
+                              >Edit</v-btn
+                           >
+                        </router-link>
                         <v-btn
                            color="red darken-4"
                            small
@@ -91,7 +105,7 @@
                               color="red darken-4"
                               dark
                               small
-                              @click="dialog = false"
+                              @click="deleteBlog"
                            >
                               Delete
                            </v-btn>
@@ -105,12 +119,14 @@
    </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
    // props:{
    //     edit:{
    //         default:true
    //     }
    // },
+   props: ["title", "summary", "body", "id", "img"],
    data() {
       return {
          dialog: false,
@@ -118,7 +134,18 @@ export default {
          isBookmarked: false,
       };
    },
+   computed: {
+      imageUrl() {
+         return `http://localhost/fireblogs-api/public/images/${this.img}`;
+      },
+   },
    methods: {
+      deleteBlog(){
+         this.dialog=false;
+         axios.delete(`/post/${this.id}/delete`).then(()=>{
+            this.$emit("delete-post", this.id);
+         })
+      }
       //    liked(){
       //        this.isLiked=!this.isLiked;
       //    },

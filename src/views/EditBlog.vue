@@ -5,7 +5,7 @@
          <div class="tw-pt-8 tw-flex tw-justify-between">
             <h1 class="tw-text-3xl tw-font-semibold">Write your story.</h1>
 
-            <v-btn @click="create" color="#2A73C5" dark>Create</v-btn>
+            <v-btn @click="Update" color="#2A73C5" dark>Update</v-btn>
          </div>
          <div class="tw-flex tw-flex-col tw-my-6">
             <div class="tw-flex">
@@ -44,7 +44,7 @@
                id="summary"
                placeholder="Your Summary..."
                class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-rounded-md"
-               v-model.trim="excerpt"
+               v-model.trim="summary"
             />
          </div>
          <div class="tw-flex tw-justify-between tw-my-6">
@@ -66,7 +66,11 @@
                <div>
                   <div>
                      <v-row justify="center">
-                        <v-dialog v-model="dialog" max-width="400" max-height="1000">
+                        <v-dialog
+                           v-model="dialog"
+                           max-width="400"
+                           max-height="1000"
+                        >
                            <template v-slot:activator="{ on, attrs }">
                               <div class="tw-mr-2">
                                  <v-btn
@@ -95,10 +99,16 @@
                                  Preview
                               </v-card-title>
                               <v-img
+                                 v-if="!userSelected"
+                                 :src="imageUrl"
+                                 contain
+                                 transition="fade-transition"
+                              ></v-img>
+                              <v-img
+                                 v-if="userSelected"
                                  :src="image"
                                  contain
                                  transition="fade-transition"
-                                
                               ></v-img>
                            </v-card>
                         </v-dialog>
@@ -117,22 +127,22 @@
 import { VueEditor } from "vue2-editor";
 import axios from "axios";
 export default {
+   props: ["title", "summary", "body", "id", "img", "preview"],
    data() {
       return {
-         title: "",
          excerpt: "",
-         body: "",
+
          titleIsValid: true,
          summaryIsValid: true,
          formIsValid: true,
          selectedFile: null,
-         preview: false,
+         userSelected: false,
          image: "",
       };
    },
    computed: {
       imageUrl() {
-         return ``;
+         return `http://localhost/fireblogs-api/public/images/${this.img}`;
       },
    },
    methods: {
@@ -141,6 +151,7 @@ export default {
          this.preview = true;
          console.log(event);
          this.image = URL.createObjectURL(this.selectedFile);
+         this.userSelected = true;
       },
       validate() {
          this.titleIsValid = true;
@@ -150,29 +161,31 @@ export default {
             this.titleIsValid = false;
             this.formIsValid = false;
          }
-         if (this.excerpt === "") {
+         if (this.summary === "") {
             this.summaryIsValid = false;
             this.formIsValid = false;
          }
       },
-      create() {
+      Update() {
          this.validate();
          if (this.formIsValid) {
             const formData = new FormData();
-            formData.append("image", this.selectedFile);
+            if (this.userSelected) {
+               formData.append("image", this.selectedFile);
+            }
+
             formData.append("name", this.title);
             formData.append("body", this.body);
-            formData.append("excerpt", this.excerpt);
+            formData.append("excerpt", this.summary);
             formData.append("tags", "#test");
             axios
-               .post(`/post/create`, formData, {
+               .post(`/post/${this.id}/update`, formData, {
                   headers: {
                      Authorization: "Bearer " + localStorage.getItem("token"),
                   },
                })
-               .then((res) => {
-                  console.log(res);
-                  this.$router.push('/blogs')
+               .then(() => {
+                  this.$router.push("/blogs");
                })
                .catch((err) => console.log(err));
          }

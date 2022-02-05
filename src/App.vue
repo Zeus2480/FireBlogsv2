@@ -16,6 +16,9 @@
 .v-application a{
   color: unset !important;
 }
+.v-application p {
+   margin-bottom: unset !important;
+}
 #app{
   text-align: unset !important;
 }

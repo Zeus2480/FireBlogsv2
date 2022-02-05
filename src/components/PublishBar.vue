@@ -3,47 +3,49 @@
       <div
          class="tw-w-full tw-my-3 tw-py-3 tw-rounded-xl tw--border-2 tw-border-2 tw-border-white tw-cursor-pointer tw-px-4 tw-bg-gray-200"
       >
-         <div class="tw-flex  tw-justify-between">
-            <div class="tw-flex ">
+         <div class="tw-flex tw-justify-between">
+            <div class="tw-flex">
                <div class="tw-flex">
                   <img
                      src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
-                  <h3 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                     Olivia Rodrigo
-                  </h3>
+                  <div class="tw-w-52 tw-my-auto">
+                     <h3
+                        class="tw-text-black tw-my-auto tw-ml-6 tw-font-medium"
+                     >
+                        Olivia Rodrigo
+                     </h3>
+                  </div>
                </div>
-               <div class="tw-flex tw-mx-8  set-width">
-                  <h3 class="tw-text-black tw-truncate tw-my-auto tw-mx-6 tw-font-medium">
-                     This the titleee shgj hjasg hsf sfdhj gsfhg ffhsg yshd dsf fsdj fdhjk hfdsj gfhj gfsshg dfshgdfh jskdhgfsajd fhsajk fkHFJDSFHSAJ FHSJK AFHHSDAGF GJSKH AJKHSAJFAN BCXN BDSN 
+               <div class="tw-flex tw-mx-8 set-width">
+                  <h3
+                     class="tw-text-black tw-truncate tw-my-auto tw-mx-6 tw-font-medium"
+                  >
+                     {{ title }}
                   </h3>
                </div>
             </div>
             <div>
-               <v-btn v-if="!isPublished" dark @click="publish" color="primary"
+               <v-btn v-if="!status" dark @click="publish" color="primary"
                   >Publish</v-btn
                >
-               <v-btn
-                  v-if="isPublished"
-                  disabled
-                  @click="publish"
-                  color="primary"
+               <v-btn v-if="status" disabled @click="publish" color="primary"
                   >Publish</v-btn
                >
                <v-btn
                   dark
-                  v-if="isPublished"
-                  @click="unPublish"
+                  v-if="status"
+                  @click="unpublish"
                   color="primary"
                   class="tw-ml-1"
                   >Unpublish</v-btn
                >
                <v-btn
                   disabled
-                  v-if="!isPublished"
-                  @click="unPublish"
+                  v-if="!status"
+                  @click="unpublish"
                   color="primary"
                   class="tw-ml-1"
                   >Unpublish</v-btn
@@ -54,24 +56,58 @@
    </div>
 </template>
 <script>
+import axios from "axios";
 export default {
+   props: ["id", "title", "status", "userName", "profilePicture"],
    data() {
       return {
          isPublished: false,
       };
    },
    methods: {
-      publish() {
-         this.isPublished = !this.isPublished;
+      unpublish() {
+         axios
+            .post(
+               `/post/${this.id}/unpublish`,
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then((res) => {
+               console.log(res);
+               this.status = !this.status;
+            })
+            .catch((err) => {
+               console.log(err);
+            });
       },
-      unPublish() {
-         this.isPublished = !this.isPublished;
+      publish() {
+         axios
+            .post(
+               `/post/${this.id}/publish`,
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then((res) => {
+               console.log(res);
+               this.status = !this.status;
+            })
+            .catch((err) => {
+               console.log(err);
+            });
       },
    },
 };
 </script>
 <style scoped>
-.set-width{
-    max-width:40vw
+.set-width {
+   max-width: 40vw;
 }
 </style>

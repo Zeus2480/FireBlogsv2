@@ -9,15 +9,22 @@
             <div class="tw-pl-16 tw-w-full tw-flex tw-justify-between">
                <div class="tw-flex">
                   <div class="tw-flex tw-mr-4">
-                     <button>
+                     <button v-if="!isLiked" @click="like">
                         <img
-                           src="../assets/Logo/heart 2.png"
+                           src="../assets/Logo/love.png"
+                           class="tw-h-5 focus:tw-cursor-pointer"
+                           alt=""
+                        />
+                     </button>
+                     <button v-else @click="unLike">
+                        <img
+                           src="../assets/Logo/heart.png"
                            class="tw-h-5 focus:tw-cursor-pointer"
                            alt=""
                         />
                      </button>
                      <div class="tw-flex tw-items-center">
-                        <p class="tw-ml-2">1k</p>
+                        <p class="tw-ml-2 tw-w-3">{{ likeCount }}</p>
                      </div>
                   </div>
                   <div class="tw-flex">
@@ -32,9 +39,16 @@
                   </div>
                </div>
                <div class="tw-mr-4">
-                  <button>
+                  <button v-if="!isBookmarked" @click="bookmark">
                      <img
-                        src="../assets/Logo/Vector.png"
+                        src="../assets/Logo/bookmark.png"
+                        class="tw-h-5"
+                        alt=""
+                     />
+                  </button>
+                  <button v-else @click="unBookmark">
+                     <img
+                        src="../assets/Logo/bookmark (1).png"
                         class="tw-h-5"
                         alt=""
                      />
@@ -47,7 +61,7 @@
       <div class="tw-flex tw-w-screen tw-h-full">
          <div class="content tw-w-3/4 tw-h-full">
             <div class="tw-pl-14 tw-pt-10 tw-mt-10 tw-pr-4">
-               <h1 class="tw-text-5xl tw-font-semibold">Ode To tenhood</h1>
+               <h1 class="tw-text-5xl tw-font-semibold">{{ title }}</h1>
                <div class="tw-flex">
                   <img
                      src="../assets/images/profilepicture.jpg"
@@ -62,90 +76,16 @@
                   </div>
                </div>
                <div class="tw-flex tw-mb-20">
-                  <p class="tw-breal-all">
-                     There’s this Sylvia Plath poem called Mad Girl’s Love Song.
-                     It might just be the epitome of teen romance, but alas,
-                     discrediting one’s own desire to be loved is yet another
-                     byproduct of (say it with me) misogyny. I think that’s
-                     really what it is to be a teenage girl. To love. Not just
-                     boys, of course. Girls, too. And the wind. And the sea. And
-                     Sylvia Plath. It can be difficult to love yourself when you
-                     are thrust into a world hell-bent on turning you into
-                     something you’re not. Capitalism, Eurocentrism, misogyny,
-                     you name it. These tremendous, intangible forces are to
-                     blame for deep trauma. Something as simple as growing out
-                     body hair becomes unduly politicized, almost Kafkaesque in
-                     nature. Because, having jurisdiction over our own
-                     appearances and behaviors would first require society to
-                     admit that we are autarkic to the core; able to depend on
-                     ourselves to learn and understand the world. It makes sense
-                     though. If we had full autonomy, we wouldn’t be exploited
-                     and targeted for consumerist purposes. So we’re stripped of
-                     cultural capital, rendered obsolete in intellectual
-                     circles. Change is guaranteed from the start, that much is
-                     true. But it seems almost prefigured that we will grow into
-                     individuals accepting of our circumstances. It’s not the
-                     growing up that’s the problem, it’s losing the teenageness.
-                     The innate rebellion, the fervor for life. It’s when we
-                     don’t belong to anyone that we are at our most potent, for
-                     lack of a better word. Soon corporate America and the
-                     Western dating scene (insert distant church bells) auction
-                     off every ounce of individual sovereignty until we’re
-                     merely conduits for reproduction and labor. That’s not to
-                     say that working women and mothers don’t have strength or
-                     can’t create change, just that things get muddled.
-                     Responsibilities emerge, mortgages need to be paid,
-                     children fed. The aliveness is deadened. In that later
-                     stage of life, there’s more to live for than just yourself.
-                     The same can’t be said for the teenage girl, whose
-                     vehemence is fueled by the very thing it stands to
-                     incitZFThere’s this Sylvia Plath poem called Mad Girl’s
-                     Love Song. It might just be the epitome of teen romance,
-                     but alas, discrediting one’s own desire to be loved is yet
-                     another byproduct of (say it with me) misogyny. I think
-                     that’s really what it is to be a teenage girl. To love. Not
-                     just boys, of course. Girls, too. And the wind. And the
-                     sea. And Sylvia Plath. It can be difficult to love yourself
-                     when you are thrust into a world hell-bent on turning you
-                     into something you’re not. Capitalism, Eurocentrism,
-                     misogyny, you name it. These tremendous, intangible forces
-                     are to blame for deep trauma. Something as simple as
-                     growing out body hair becomes unduly politicized, almost
-                     Kafkaesque in nature. Because, having jurisdiction over our
-                     own appearances and behaviors would first require society
-                     to admit that we are autarkic to the core; able to depend
-                     on ourselves to learn and understand the world. It makes
-                     sense though. If we had full autonomy, we wouldn’t be
-                     exploited and targeted for consumerist purposes. So we’re
-                     stripped of cultural capital, rendered obsolete in
-                     intellectual circles. Change is guaranteed from the start,
-                     that much is true. But it seems almost prefigured that we
-                     will grow into individuals accepting of our circumstances.
-                     It’s not the growing up that’s the problem, it’s losing the
-                     teenageness. The innate rebellion, the fervor for life.
-                     It’s when we don’t belong to anyone that we are at our most
-                     potent, for lack of a better word. Soon corporate America
-                     and the Western dating scene (insert distant church bells)
-                     auction off every ounce of individual sovereignty until
-                     we’re merely conduits for reproduction and labor. That’s
-                     not to say that working women and mothers don’t have
-                     strength or can’t create change, just that things get
-                     muddled. Responsibilities emerge, mortgages need to be
-                     paid, children fed. The aliveness is deadened. In that
-                     later stage of life, there’s more to live for than just
-                     yourself. The same can’t be said for the teenage girl,
-                     whose vehemence is fueled by the very thing it stands to
-                     incitZF
-                  </p>
+                  <p class="tw-breal-all" v-html="body"></p>
                </div>
                <div></div>
             </div>
          </div>
          <div
-            class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-black tw-fixed tw-right-0"
+            class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-black tw-right-0"
          >
             <div class="tw-relative">
-               <div class="tw-absolute tw-z-50 tw-h-full tw-right-4 ">
+               <div class="tw-absolute tw-z-50 tw-h-full tw-right-4">
                   <v-alert
                      v-if="followAlert"
                      class="tw-w-96"
@@ -245,7 +185,6 @@
                   <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser> -->
-                  
                </div>
             </div>
          </div>
@@ -260,9 +199,9 @@
       >
          <div class="tw-pt-4 tw-w-full tw-z-40 tw-mt-10 tw-px-4">
             <div>
-               <h1 class="tw-text-xl tw-font-semibold">Responses (10)</h1>
+               <h1 class="tw-text-xl tw-font-semibold">Responses ({{commentsArray.length}})</h1>
             </div>
-            <div class=" tw-my-4">
+            <div class="tw-my-4">
                <textarea
                   name=""
                   placeholder="What are your thoughts?"
@@ -270,36 +209,48 @@
                   id=""
                   cols="39"
                   rows="4"
+                  v-model="commentBody"
                ></textarea>
                <div class="tw-flex tw-items-center">
                   <v-btn
+                     @click="comment"
                      dark
                      color="#2A73C5"
                      block
-                     class="tw-flex  tw-items-center tw-ml-2"
+                     class="tw-flex tw-items-center tw-ml-2"
                      >Comment</v-btn
                   >
                </div>
             </div>
             <div class="tw-mb-16">
-               <Comment></Comment>
-               <Comment></Comment>
-               <Comment></Comment>
-               <Comment></Comment>
-               <Comment></Comment>
-               <Comment></Comment>
+               <Comment v-for="(comment,index) in commentsArray"
+               :key="index"
+               :body="comment.body"
+               :userName="comment.user_name"
+               :userId="comment.user_id"
+               :loggedUserId="loggedInUserId"
+               
+               ></Comment>
+               
             </div>
          </div>
       </v-navigation-drawer>
    </div>
 </template>
 <script>
+import axios from "axios";
 import Comment from "../components/Comments.vue";
 import MoreFromUser from "../components/MoreFromUser.vue";
 export default {
+   props: ["id"],
    components: {
       Comment,
       MoreFromUser,
+   },
+   computed: {
+      imageUrl() {
+         return `http://localhost/fireblogs-api/public/images/${this.imgpath}`;
+      },
    },
    data() {
       return {
@@ -307,12 +258,154 @@ export default {
          follow: false,
          followAlert: false,
          unFollowAlert: false,
+         isBookmarked: null,
+         isLiked: null,
+         title: "",
+         body: "",
+         imgpath: "",
+         likeCount: null,
+         commentBody: "",
+         commentsArray: [],
+         loggedInUserId:null
       };
    },
+   created() {
+      this.getData();
+      this.userLiked();
+      this.userBookmarked();
+      this.noOfLikes();
+      this.getCommentsArray();
+   },
    methods: {
-      toggle() {
-         this.follow = !this.follow;
+      getUserID(){
+         this.loggedInUserId=this.$store.getters.userId;
+         console.log(this.loggedInUserId)
       },
+      getCommentsArray() {
+         this.getUserID()
+         console.log(123);
+         axios.get("/comments").then((res) => {
+            this.commentsArray = res.data.filter(
+               (data) => data.post_id == this.id
+            );
+            console.log(this.commentsArray);
+         });
+      },
+      comment() {
+         axios
+            .post(
+               `/post/${this.id}/comments`,
+               {
+                  body: this.commentBody,
+               },
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then(() => {
+               const data={
+                  body:this.commentBody,
+                  user_name:this.$store.getters.userName,
+                  user_id:this.$store.getters.userId
+               }
+               this.commentsArray.push(data);
+
+            });
+      },
+      noOfLikes() {
+         axios.get(`/post/${this.id}/counts`).then((res) => {
+            this.likeCount = res.data.like;
+         });
+      },
+      userBookmarked() {
+         axios
+            .get(
+               `/check/bookmark?post_id=${this.id}&Aut=${localStorage.getItem(
+                  "token"
+               )}`,
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then((res) => {
+               this.isBookmarked = res.data.is_bookmark;
+            });
+      },
+      userLiked() {
+         axios
+            .get(`/liked/${this.id}`, {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then((res) => {
+               this.isLiked = res.data.is_like;
+            });
+      },
+      getData() {
+         axios.get(`/post/${this.id}`).then((res) => {
+            this.title = res.data.name;
+            this.body = res.data.body;
+            this.imgpath = res.data.image_path;
+         });
+      },
+      like() {
+         axios
+            .post(
+               `/post/${this.id}/likes`,
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then(() => {
+               this.isLiked = !this.isLiked;
+               this.likeCount++;
+            });
+      },
+      unLike() {
+         axios
+            .post(
+               `/post/${this.id}/likes`,
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then(() => {
+               this.isLiked = !this.isLiked;
+               this.likeCount--;
+            });
+      },
+      bookmark() {
+         axios
+            .post(
+               `/post/${this.id}/bookmark`,
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then(() => {
+               this.isBookmarked = !this.isBookmarked;
+            });
+      },
+      unBookmark() {
+         this.bookmark();
+      },
+      // toggle() {
+      //    this.follow = !this.follow;
+      // },
       unFollowAlertFunction() {
          this.unFollowAlert = true;
          this.settimeUnFollow();

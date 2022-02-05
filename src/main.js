@@ -11,6 +11,7 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 Vue.config.productionTip = false
 Vue.component('Navbar',Navbar)
 Vue.component('Footer',Footer)
+
 new Vue({
   router,
   store,

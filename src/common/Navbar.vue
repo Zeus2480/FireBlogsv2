@@ -23,7 +23,7 @@
                         />
                      </div>
                      <div class="name tw-mx-auto tw-mb-2">
-                        <h1 class="tw-font-semibold tw-text-xl">Hey Faizan</h1>
+                        <h1 class="tw-font-semibold tw-text-xl">Hey {{userName}}</h1>
                      </div>
                      <div class="tw-flex-col tw-flex tw-w-full tw-items-center">
                         <div v-if="adminCheck"
@@ -181,13 +181,19 @@ export default {
             console.log(res);
             localStorage.removeItem("token");
             this.drawer=false;
+            this.$router.push('/blogs')
             this.$router.go()
-            
+             this.$store.dispatch("setUserName", {
+                        userName: "",
+                     });
+                     this.$store.dispatch("setUserId", {
+                        userId: null,
+                     });
 
          });
       },
       getProfile() {
-         if (this.$store.getters.userName === "") {
+         if (this.$store.getters.userName === "" ||this.$store.getters.userId === "") {
             if (localStorage.getItem("token")) {
                axios
                   .post(

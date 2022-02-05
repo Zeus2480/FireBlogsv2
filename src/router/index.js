@@ -11,6 +11,7 @@ import EditProfile from '../views/EditProfile.vue'
 import ViewPost from '../views/ViewPost.vue'
 import Profile from '../views/Profile.vue'
 import Bookmarks from '../views/Bookmarks.vue'
+import EditBlog from '../views/EditBlog.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -22,6 +23,12 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/editblog',
+    name: 'editblog',
+    component: EditBlog,
+    props:true
   },
   {
     path: '/bookmark',

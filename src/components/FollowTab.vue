@@ -11,16 +11,20 @@
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
-                  <h3 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                     Olivia Rodrigo
-                  </h3>
+                  <div class="tw-w-52 tw-my-auto ">
+                     <h3
+                        class="tw-text-black   tw-my-auto tw-ml-6 tw-font-medium"
+                     >
+                        Olivia Rodrigo
+                     </h3>
+                  </div>
                </div>
                <div class="tw-flex tw-mx-16">
                   <h2 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                     12 Blogs
+                      Blogs 12
                   </h2>
                   <h2 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                     466 Followers
+                     Followers 466
                   </h2>
                </div>
             </div>

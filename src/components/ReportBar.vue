@@ -11,9 +11,13 @@
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
-                  <h3 class="tw-text-black tw-my-auto tw-ml-6 tw-font-medium">
-                     Olivia Rodrigo
-                  </h3>
+                  <div class="tw-w-52 tw-my-auto ">
+                     <h3
+                        class="tw-text-black   tw-my-auto tw-ml-6 tw-font-medium"
+                     >
+                        Olivia Rodrigo
+                     </h3>
+                  </div>
                </div>
                <div class="tw-flex tw-mx-2 set-width">
                   <h3

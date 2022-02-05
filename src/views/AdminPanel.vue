@@ -11,7 +11,7 @@
                   <div class="tw-flex tw-justify-between">
                      <div class="tw-flex">
                         <v-tab href="#publish" dark class="tw-text-black"
-                           ><v-badge color="green" content="6"
+                           ><v-badge color="green" :content="allBlogs.length"
                               >Publish</v-badge
                            ></v-tab
                         >
@@ -21,7 +21,7 @@
                            ></v-tab
                         >
                         <v-tab dark href="#users"
-                           ><v-badge color="green" content="6"
+                           ><v-badge color="green" :content="allBlogs.length"
                               >Users</v-badge
                            ></v-tab
                         >
@@ -50,21 +50,17 @@
                   </v-tab-item>
                   <v-tab-item value="publish">
                      <div class="tw-mt-4">
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
-                        <PublishBar></PublishBar>
+                        <PublishBar v-for="(blog,index) in allBlogs"
+                        :key="index"
+                        :id="blog.id"
+                        :title="blog.name"
+                        :status="blog.status"
+                        ></PublishBar>
+                        
                      </div>
                   </v-tab-item>
                   <v-tab-item value="report">
-                     <div class="tw-mt-4">
+                     <div class="tw-mt-4 tw-w-full">
                         <ReportBar></ReportBar>
                         <ReportBar></ReportBar>
                         <ReportBar></ReportBar>
@@ -106,7 +102,31 @@
 import FollowTab from "../components/FollowTab.vue";
 import PublishBar from "../components/PublishBar.vue";
 import ReportBar from "../components/ReportBar.vue";
+import axios from 'axios'
 export default {
+   data(){
+      return{
+         allBlogs:[]
+      }
+   },
+   created(){
+      this.getPublishBlogs();
+   },
+   methods:{
+      getPublishBlogs(){
+         axios.get('/post',
+            {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            }).then(res=>{
+               this.allBlogs=res.data
+               console.log(this.allBlogs);
+            }).catch(err=>{
+               console.log(err)
+            })
+      }
+   },
    components: {
       FollowTab,
       PublishBar,
