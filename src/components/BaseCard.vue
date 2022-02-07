@@ -1,6 +1,7 @@
 <template>
    <div>
       <div
+      @click="open"
          class="tw-rounded-xl tw-relative"
          style="width: 310px; height: 300px; background-color: #1c1f26"
       >
@@ -140,6 +141,10 @@ export default {
       },
    },
    methods: {
+      open(event){
+         console.log(event)
+         this.$router.push(`/viewpost/${this.id}`)
+      },
       deleteBlog(){
          this.dialog=false;
          axios.delete(`/post/${this.id}/delete`).then(()=>{
