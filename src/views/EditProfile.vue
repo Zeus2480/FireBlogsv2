@@ -13,47 +13,137 @@
                   alt=""
                />
                <div class="tw-flex tw-items-center">
-                  <v-btn
-                     dark
-                     small
-                     color="#2A73C5"
-                     class="tw-flex tw-items-center tw-ml-6"
-                     >Edit Profile Picture</v-btn
-                  >
+                  <v-row justify="center">
+                     <v-dialog
+                        v-model="dialog"
+                        max-width="400"
+                        max-height="1000"
+                     >
+                        <template v-slot:activator="{ on, attrs }">
+                           <div class="tw-mr-2">
+                              <v-btn
+                                 dark
+                                 small
+                                 color="#2A73C5"
+                                 v-bind="attrs"
+                                 v-on="on"
+                                 class="tw-flex tw-items-center tw-ml-6"
+                                 >Edit Profile Picture</v-btn
+                              >
+                           </div>
+                        </template>
+                        <v-card>
+                           <v-card-title class="tw-text-center text-h5">
+                              Edit Profile Picture
+                           </v-card-title>
+                           <v-img
+                              v-if="userSelected"
+                              :src="imageUrl"
+                              contain
+                              transition="fade-transition"
+                           ></v-img>
+                           <div class="tw-p-4">
+                              <input
+                                 type="file"
+                                 @change="onFileSelected"
+                                 id="imageInput"
+                                 class=""
+                                 accept=".png, .jpg, .jpeg"
+                              />
+                              
+                           </div>
+                           <div class="tw-flex tw-flex-row-reverse tw-p-4 tw-pt-0">
+                              <v-btn right color="primary" :disabled="!userSelected" >Upload</v-btn>
+                           </div>
+                        </v-card>
+                     </v-dialog>
+                  </v-row>
                </div>
-               
             </div>
             <div class="tw-flex tw-flex-col tw-my-4">
-                <label for="Name" class="tw-mb-4 tw-text-xl tw-font-medium">Name</label>
-                <input type="text" id="Name" placeholder="" class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md">
+               <label for="Name" class="tw-mb-4 tw-text-xl tw-font-medium"
+                  >Name</label
+               >
+               <input
+                  type="text"
+                  id="Name"
+                  placeholder=""
+                  class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
+               />
             </div>
             <div class="tw-flex tw-flex-col tw-my-4">
-                <label for="Bio" class="tw-mb-4 tw-text-xl tw-font-medium">Bio</label>
-                <textarea name="" id="" class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-border-2 tw-border-solid tw-border-gray-300 tw-rounded-md" placeholder="Type your bio here..."  rows="4"></textarea>
+               <label for="Bio" class="tw-mb-4 tw-text-xl tw-font-medium"
+                  >Bio</label
+               >
+               <textarea
+                  name=""
+                  id=""
+                  class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-border-2 tw-border-solid tw-border-gray-300 tw-rounded-md"
+                  placeholder="Type your bio here..."
+                  rows="4"
+               ></textarea>
             </div>
-            <label  class="tw-mb-4 tw-text-xl tw-font-medium">Socials</label>
+            <label class="tw-mb-4 tw-text-xl tw-font-medium">Socials</label>
             <div class="tw-flex tw-flex-col tw-my-4">
-                <label for="insta" class="tw-mb-4 tw-text-xl tw-font-medium">Instagram</label>
-                <input type="text" id="insta" placeholder="Paste your instagram link here..." class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md">
+               <label for="insta" class="tw-mb-4 tw-text-xl tw-font-medium"
+                  >Instagram</label
+               >
+               <input
+                  type="text"
+                  id="insta"
+                  placeholder="Paste your instagram link here..."
+                  class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
+               />
             </div>
             <div class="tw-flex tw-flex-col tw-my-4">
-                <label for="facebook" class="tw-mb-4 tw-text-xl tw-font-medium">Facebook</label>
-                <input type="text" id="facebook" placeholder="Paste your facebook link here..." class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md">
+               <label for="facebook" class="tw-mb-4 tw-text-xl tw-font-medium"
+                  >Facebook</label
+               >
+               <input
+                  type="text"
+                  id="facebook"
+                  placeholder="Paste your facebook link here..."
+                  class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
+               />
             </div>
             <div class="tw-flex tw-flex-col tw-my-4">
-                <label for="twitter" class="tw-mb-4 tw-text-xl tw-font-medium">Twitter</label>
-                <input type="text" id="twitter" placeholder="Paste your twitter link here..." class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md">
+               <label for="twitter" class="tw-mb-4 tw-text-xl tw-font-medium"
+                  >Twitter</label
+               >
+               <input
+                  type="text"
+                  id="twitter"
+                  placeholder="Paste your twitter link here..."
+                  class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
+               />
             </div>
             <div class="tw-flex tw-flex-col tw-my-4 tw-mb-10">
-               <v-btn
-                     dark
-                     color="#2A73C5"
-                     class="tw-flex tw-items-center"
-                     >Update</v-btn
-                  >
+               <v-btn dark color="#2A73C5" class="tw-flex tw-items-center"
+                  >Update</v-btn
+               >
             </div>
          </div>
       </div>
       <Footer></Footer>
    </div>
 </template>
+<script>
+export default {
+   data(){
+      return{
+         selectedFile:"",
+         imageUrl:"",
+         userSelected:null
+      }
+   },
+   methods:{
+      onFileSelected(e){
+         this.selectedFile = e.target.files[0];
+         
+         
+         this.imageUrl = URL.createObjectURL(this.selectedFile);
+         this.userSelected = true;
+      }
+   }
+}
+</script>

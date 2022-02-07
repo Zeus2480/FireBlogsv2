@@ -22,10 +22,11 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
+    props:true
   },
   {
-    path: '/editblog',
+    path: '/editblog/:id',
     name: 'editblog',
     component: EditBlog,
     props:true

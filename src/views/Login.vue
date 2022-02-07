@@ -97,7 +97,7 @@ export default {
                .then((response) => {
                   console.log(response.data.access_token);
                   localStorage.setItem("token", response.data.access_token);
-                  this.$router.push("/home");
+                  this.$router.push({ name: 'home', params: {loggedIn: true }});
                })
                .catch((err) => {
                   if (err.response.status === 401) {

@@ -22,7 +22,7 @@
             </div>
          </div>
          <div class="tw-mt-8">
-            <v-tabs color="black accent-4" left v-model="tab">
+            <v-tabs color="black accent-4" left >
                <div class="tw-flex tw-justify-between tw-w-full">
                   <div
                      class="tw-flex tw-border-b-2 tw-w-full tw-border-gray-300 tw-border-solid"

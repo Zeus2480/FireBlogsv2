@@ -1,7 +1,20 @@
 <template>
    <div>
       <Navbar></Navbar>
-
+      <div class="">
+         <v-row justify="center">
+            <v-dialog v-model="dialog" max-width="400" max-height="1000">
+               <v-card>
+                  <v-card-title class="tw-text-center text-h5">
+                     You are not Logged In
+                  </v-card-title>
+                  <div class="tw-p-4 tw-flex tw-flex-row-reverse">
+                     <v-btn right color="primary" @click="login">Login</v-btn>
+                  </div>
+               </v-card>
+            </v-dialog>
+         </v-row>
+      </div>
       <div
          class="bottom tw-w-screen tw-h-10 tw-flex tw-fixed tw-bottom-0 tw-z-10 tw-border-black tw-border-t-2"
       >
@@ -35,7 +48,9 @@
                            alt=""
                         />
                      </button>
-                     <p class="tw-flex tw-items-center tw-ml-2">234</p>
+                     <p class="tw-flex tw-items-center tw-ml-2">
+                        {{ commentsArray.length }}
+                     </p>
                   </div>
                </div>
                <div class="tw-mr-4">
@@ -72,7 +87,7 @@
                      <h1 class="tw-text-base">Faizan Siddiqui</h1>
                   </div>
                   <div class="tw-flex tw-items-center">
-                     <h1 class="tw-text-sm tw-opacity-75">21 Jan 2021</h1>
+                     <h1 class="tw-text-sm tw-opacity-75">{{dateFormat}}</h1>
                   </div>
                </div>
                <div class="tw-flex tw-mb-20">
@@ -199,7 +214,9 @@
       >
          <div class="tw-pt-4 tw-w-full tw-z-40 tw-mt-10 tw-px-4">
             <div>
-               <h1 class="tw-text-xl tw-font-semibold">Responses ({{commentsArray.length}})</h1>
+               <h1 class="tw-text-xl tw-font-semibold">
+                  Responses ({{ commentsArray.length }})
+               </h1>
             </div>
             <div class="tw-my-4">
                <textarea
@@ -217,21 +234,22 @@
                      dark
                      color="#2A73C5"
                      block
-                     class="tw-flex tw-items-center tw-ml-2"
+                     :loading="loading"
+                     class="loading tw-flex tw-items-center tw-ml-2"
                      >Comment</v-btn
                   >
                </div>
             </div>
             <div class="tw-mb-16">
-               <Comment v-for="(comment,index) in commentsArray"
-               :key="index"
-               :body="comment.body"
-               :userName="comment.user_name"
-               :userId="comment.user_id"
-               :loggedUserId="loggedInUserId"
-               
+               <Comment
+                  v-for="(comment, index) in commentsArray"
+                  :key="index"
+                  :body="comment.body"
+                  :userName="comment.user_name"
+                  :userId="comment.user_id"
+                  :loggedUserId="loggedInUserId"
+                  :date="comment.created_at"
                ></Comment>
-               
             </div>
          </div>
       </v-navigation-drawer>
@@ -241,6 +259,7 @@
 import axios from "axios";
 import Comment from "../components/Comments.vue";
 import MoreFromUser from "../components/MoreFromUser.vue";
+import moment from 'moment'
 export default {
    props: ["id"],
    components: {
@@ -250,6 +269,16 @@ export default {
    computed: {
       imageUrl() {
          return `http://localhost/fireblogs-api/public/images/${this.imgpath}`;
+      },
+      dateFormat() {
+         return moment(this.date).calendar(new Date(), {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd",
+            lastDay: "[Yesterday]",
+            lastWeek: "[Last] dddd",
+            sameElse: "DD/MM/YYYY",
+         });
       },
    },
    data() {
@@ -266,7 +295,10 @@ export default {
          likeCount: null,
          commentBody: "",
          commentsArray: [],
-         loggedInUserId:null
+         loggedInUserId: null,
+         loading: false,
+         dialog: false,
+         date:null
       };
    },
    created() {
@@ -277,13 +309,13 @@ export default {
       this.getCommentsArray();
    },
    methods: {
-      getUserID(){
-         this.loggedInUserId=this.$store.getters.userId;
-         console.log(this.loggedInUserId)
+      getUserID() {
+         this.loggedInUserId = this.$store.getters.userId;
+         // console.log(this.loggedInUserId);
       },
       getCommentsArray() {
-         this.getUserID()
-         console.log(123);
+         this.getUserID();
+         // console.log(123);
          axios.get("/comments").then((res) => {
             this.commentsArray = res.data.filter(
                (data) => data.post_id == this.id
@@ -292,27 +324,38 @@ export default {
          });
       },
       comment() {
-         axios
-            .post(
-               `/post/${this.id}/comments`,
-               {
-                  body: this.commentBody,
-               },
-               {
-                  headers: {
-                     Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-               }
-            )
-            .then(() => {
-               const data={
-                  body:this.commentBody,
-                  user_name:this.$store.getters.userName,
-                  user_id:this.$store.getters.userId
-               }
-               this.commentsArray.push(data);
+         this.loading = true;
+         if(this.$store.getters.userName !== ""){
 
-            });
+            axios
+               .post(
+                  `/post/${this.id}/comments`,
+                  {
+                     body: this.commentBody,
+                  },
+                  {
+                     headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then(() => {
+                  const data = {
+                     body: this.commentBody,
+                     user_name: this.$store.getters.userName,
+                     user_id: this.$store.getters.userId,
+                  };
+                  this.commentBody=""
+                  this.commentsArray.push(data);
+               })
+               .finally(() => {
+                  this.loading = false;
+                  this.commentBody=""
+               });
+         }
+         else{
+            this.dialog=true;
+         }
       },
       noOfLikes() {
          axios.get(`/post/${this.id}/counts`).then((res) => {
@@ -351,23 +394,32 @@ export default {
             this.title = res.data.name;
             this.body = res.data.body;
             this.imgpath = res.data.image_path;
+            this.date=res.data.created_at
          });
       },
+      login() {
+         this.$router.push("/login");
+      },
       like() {
-         axios
-            .post(
-               `/post/${this.id}/likes`,
-               {},
-               {
-                  headers: {
-                     Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-               }
-            )
-            .then(() => {
-               this.isLiked = !this.isLiked;
-               this.likeCount++;
-            });
+         if (this.$store.getters.userName !== "") {
+            axios
+               .post(
+                  `/post/${this.id}/likes`,
+                  {},
+                  {
+                     headers: {
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then(() => {
+                  this.isLiked = !this.isLiked;
+                  this.likeCount++;
+               });
+         } else {
+            this.dialog = true;
+         }
       },
       unLike() {
          axios
@@ -386,19 +438,24 @@ export default {
             });
       },
       bookmark() {
-         axios
-            .post(
-               `/post/${this.id}/bookmark`,
-               {},
-               {
-                  headers: {
-                     Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-               }
-            )
-            .then(() => {
-               this.isBookmarked = !this.isBookmarked;
-            });
+         if (this.$store.getters.userName !== "") {
+            axios
+               .post(
+                  `/post/${this.id}/bookmark`,
+                  {},
+                  {
+                     headers: {
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then(() => {
+                  this.isBookmarked = !this.isBookmarked;
+               });
+         } else {
+            this.dialog = true;
+         }
       },
       unBookmark() {
          this.bookmark();
@@ -412,9 +469,15 @@ export default {
          this.follow = false;
       },
       followAlertFunction() {
-         this.followAlert = true;
-         this.settimeFollow();
-         this.follow = true;
+         if(this.$store.getters.userName !== ""){
+
+            this.followAlert = true;
+            this.settimeFollow();
+            this.follow = true;
+         }
+         else{
+            this.dialog=true;
+         }
       },
       settimeFollow() {
          setTimeout(() => {

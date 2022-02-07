@@ -11,13 +11,13 @@
             />
             <div class="tw-mx-2">
                <h1 class="tw-text-base">{{userName}}</h1>
-               <p class="tw-text-xs tw-opacity-60">15 Days ago</p>
+               <p class="tw-text-xs tw-opacity-60">{{ dateFormat}}</p>
             </div>
          </div>
          <div class="tw-my-auto">
             <!-- <button @click.stop="!report"></button> -->
             
-               <v-menu offset-y absolute="true">
+               <v-menu offset-y absolute>
                   <template v-slot:activator="{ on, attrs }">
                      <v-btn depressed color="#fff" v-bind="attrs" v-on="on">
                         <img
@@ -46,8 +46,9 @@
    </div>
 </template>
 <script>
+import moment from 'moment'
 export default {
-   props:['body','userName','userId','loggedUserId'],
+   props:['body','userName','userId','loggedUserId','date'],
    data() {
       return {
          report: null,
@@ -59,5 +60,17 @@ export default {
          ],
       };
    },
+   computed:{
+      dateFormat() {
+         return moment(this.date).calendar(new Date(), {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd",
+            lastDay: "[Yesterday]",
+            lastWeek: "[Last] dddd",
+            sameElse: "DD/MM/YYYY",
+         });
+      },
+   }
 };
 </script>

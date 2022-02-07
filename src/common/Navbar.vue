@@ -1,7 +1,8 @@
 <template>
    <v-app>
-      <div>
+      <div class="">
          <div>
+            
             <v-navigation-drawer
                v-model="drawer"
                fixed
@@ -23,10 +24,13 @@
                         />
                      </div>
                      <div class="name tw-mx-auto tw-mb-2">
-                        <h1 class="tw-font-semibold tw-text-xl">Hey {{userName}}</h1>
+                        <h1 class="tw-font-semibold tw-text-xl">
+                           Hey {{ userName }}
+                        </h1>
                      </div>
                      <div class="tw-flex-col tw-flex tw-w-full tw-items-center">
-                        <div v-if="adminCheck"
+                        <div
+                           v-if="adminCheck"
                            class="btn1 tw-flex tw-justify-center tw-my-2 tw-w-4/5"
                         >
                            <router-link
@@ -106,9 +110,13 @@
             <div class="logo-image tw-mx-6 tw-py-1 tw-h-10">
                <img src="../assets/Logo/meteor.png" alt="" class="tw-h-full" />
             </div>
-            <div class="nav-buttons tw-h-full tw-my-auto tw-mr-4 tw-flex tw-items-center   ">
-               <ul class="tw-list-none tw-h-full tw-my-auto tw-flex tw-items-center">
-                  <li class="link-item ">
+            <div
+               class="nav-buttons tw-h-full tw-my-auto tw-mr-4 tw-flex tw-items-center"
+            >
+               <ul
+                  class="tw-list-none tw-h-full tw-my-auto tw-flex tw-items-center"
+               >
+                  <li class="link-item">
                      <router-link
                         to="/home"
                         class="tw-text-white tw-no-underline"
@@ -141,12 +149,18 @@
                </ul>
             </div>
          </nav>
+         <div v-if="loggedIn" class="tw-mt-11 tw-z-50 tw-absolute tw-right-0">
+               <v-alert type="success " class="tw-w-96"
+                  >Logged In Sucessfully</v-alert
+               >
+            </div>
       </div>
    </v-app>
 </template>
 <script>
 import axios from "axios";
 export default {
+   props: ["loggedIn"],
    data() {
       return {
          drawer: null,
@@ -154,10 +168,12 @@ export default {
          userName: "",
          userId: "",
          admin: false,
+         loggedOut: false,
       };
    },
    created() {
       this.getProfile();
+      this.loggedInMessage();
    },
    computed: {
       adminCheck() {
@@ -168,32 +184,45 @@ export default {
       },
    },
    methods: {
+      loggedInMessage() {
+         if (this.loggedIn) {
+            setTimeout(() => {
+               this.loggedIn = false;
+            }, 2500);
+         }
+      },
       logout() {
-         axios.post(
-            "/logout",
-            {},
-            {
-               headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token"),
-               },
-            }
-         ).then(res=>{
-            console.log(res);
-            localStorage.removeItem("token");
-            this.drawer=false;
-            this.$router.push('/blogs')
-            this.$router.go()
-             this.$store.dispatch("setUserName", {
-                        userName: "",
-                     });
-                     this.$store.dispatch("setUserId", {
-                        userId: null,
-                     });
+         axios
+            .post(
+               "/logout",
+               {},
+               {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               }
+            )
+            .then((res) => {
+               // this.loggedOut=true;
+               console.log(res);
 
-         });
+               localStorage.removeItem("token");
+               this.drawer = false;
+               this.$router.push("/blogs");
+               this.$router.go();
+               this.$store.dispatch("setUserName", {
+                  userName: "",
+               });
+               this.$store.dispatch("setUserId", {
+                  userId: null,
+               });
+            });
       },
       getProfile() {
-         if (this.$store.getters.userName === "" ||this.$store.getters.userId === "") {
+         if (
+            this.$store.getters.userName === "" ||
+            this.$store.getters.userId === ""
+         ) {
             if (localStorage.getItem("token")) {
                axios
                   .post(

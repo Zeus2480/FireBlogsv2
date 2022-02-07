@@ -12,7 +12,7 @@
                alt=""
             />
             <h6 class="tw-ml-2 tw-text-xs tw-pt-1 tw-font-medium">
-               Olivia Fendrich
+               {{ userName }}
             </h6>
          </div>
          <div class="title">
@@ -26,7 +26,7 @@
             </p>
          </div>
          <div class="date tw-flex tw-items-baseline tw-py-2">
-            <p class="tw-opacity-75 tw-text-sm">1 Jan 2022</p>
+            <p class="tw-opacity-75 tw-text-sm">{{ dateFormat }}</p>
          </div>
       </div>
       <div class="image tw-flex-5">
@@ -40,6 +40,7 @@
    </div>
 </template>
 <script>
+import moment from "moment";
 export default {
    props: [
       "id",
@@ -53,6 +54,16 @@ export default {
    computed: {
       imageUrl() {
          return `http://localhost/fireblogs-api/public/images/${this.image}`;
+      },
+      dateFormat() {
+         return moment(this.date).calendar(new Date(), {
+            sameDay: "[Today]",
+            nextDay: "[Tomorrow]",
+            nextWeek: "dddd",
+            lastDay: "[Yesterday]",
+            lastWeek: "[Last] dddd",
+            sameElse: "DD/MM/YYYY",
+         });
       },
    },
    methods: {

@@ -5,7 +5,7 @@
          <div class="tw-pt-8 tw-flex tw-justify-between">
             <h1 class="tw-text-3xl tw-font-semibold">Write your story.</h1>
 
-            <v-btn @click="create" color="#2A73C5" dark>Create</v-btn>
+            <v-btn @click="create" :loading="loading" color="#2A73C5" dark>Create</v-btn>
          </div>
          <div class="tw-flex tw-flex-col tw-my-6">
             <div class="tw-flex">
@@ -23,7 +23,7 @@
                type="text"
                id="title"
                placeholder="Your Title..."
-               class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-rounded-md"
+               class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
                v-model.trim="title"
             />
          </div>
@@ -43,7 +43,7 @@
                type="text"
                id="summary"
                placeholder="Your Summary..."
-               class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-rounded-md"
+               class="tw-bg-gray-100 tw-border-2 tw-border-solid tw-border-gray-300 tw-px-2 tw-py-1 tw-rounded-md"
                v-model.trim="excerpt"
             />
          </div>
@@ -128,6 +128,7 @@ export default {
          selectedFile: null,
          preview: false,
          image: "",
+         loading:false
       };
    },
    computed: {
@@ -164,6 +165,7 @@ export default {
             formData.append("body", this.body);
             formData.append("excerpt", this.excerpt);
             formData.append("tags", "#test");
+            this.loading=true;
             axios
                .post(`/post/create`, formData, {
                   headers: {
@@ -174,7 +176,9 @@ export default {
                   console.log(res);
                   this.$router.push('/blogs')
                })
-               .catch((err) => console.log(err));
+               .catch((err) => console.log(err)).finally(()=>{
+                  this.loading=false;
+               });
          }
       },
    },

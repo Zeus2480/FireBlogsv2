@@ -1,7 +1,7 @@
 <template>
    <div>
       <div
-      @click="open"
+         
          class="tw-rounded-xl tw-relative"
          style="width: 310px; height: 300px; background-color: #1c1f26"
       >
@@ -53,27 +53,17 @@
                <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="290">
                      <template v-slot:activator="{ on, attrs }">
-                        <router-link
-                           :to="{
-                              name: 'editblog',
-                              params: {
-                                 title: title,
-                                 body: body,
-                                 summary: summary,
-                                 id: id,
-                                 img: img,
-                                 preview:true
-                              },
-                           }"
-                        >
+                        <div id="edit-button">
                            <v-btn
+                              @click="edit"
                               dark
                               small
                               color="primary"
                               class="tw-static tw-mx-2"
                               >Edit</v-btn
                            >
-                        </router-link>
+                        </div>
+
                         <v-btn
                            color="red darken-4"
                            small
@@ -120,7 +110,7 @@
    </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
    // props:{
    //     edit:{
@@ -141,16 +131,20 @@ export default {
       },
    },
    methods: {
-      open(event){
-         console.log(event)
-         this.$router.push(`/viewpost/${this.id}`)
+      edit() {
+         this.$router.push(`/editblog/${this.id}`);
       },
-      deleteBlog(){
-         this.dialog=false;
-         axios.delete(`/post/${this.id}/delete`).then(()=>{
+      open(e) {
+         console.log(e.target)
+        
+         this.$router.push(`/viewpost/${this.id}`);
+      },
+      deleteBlog() {
+         this.dialog = false;
+         axios.delete(`/post/${this.id}/delete`).then(() => {
             this.$emit("delete-post", this.id);
-         })
-      }
+         });
+      },
       //    liked(){
       //        this.isLiked=!this.isLiked;
       //    },

@@ -1,6 +1,6 @@
 <template>
    <div class="home">
-      <Navbar/>
+      <Navbar :loggedIn="loggedIn"></Navbar>
    
    </div>
 </template>
@@ -10,6 +10,7 @@ import Navbar from '../common/Navbar.vue';
 // @ is an alias to /src
 
 export default {
+   props:['loggedIn'],
    name: "Home",
    components: {Navbar},
 };

@@ -123,6 +123,8 @@
                         :title="blog.name"
                         :summary="blog.excerpt"
                         :image="blog.image_path"
+                        :userName="blog.users.name"
+                        :date="blog.created_at"
                      ></horizontal-blog-card>
                   </div>
                </v-tab-item>
@@ -184,11 +186,7 @@ export default {
    methods: {
       getPublishBlogs() {
          axios
-            .get("/post/publish", {
-               headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token"),
-               },
-            })
+            .get("/post/publish")
             .then((res) => {
                if (res.data != "no post is published") {
                   this.publishedBlogs = res.data;

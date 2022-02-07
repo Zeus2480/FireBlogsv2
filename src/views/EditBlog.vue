@@ -127,25 +127,42 @@
 import { VueEditor } from "vue2-editor";
 import axios from "axios";
 export default {
-   props: ["title", "summary", "body", "id", "img", "preview"],
+   props: [ "id"],
    data() {
       return {
+         preview:true,
          excerpt: "",
-
+         title:"",
+         body:"",
+         summary:"",
+         imgpath:"",
          titleIsValid: true,
          summaryIsValid: true,
          formIsValid: true,
          selectedFile: null,
          userSelected: false,
          image: "",
+         dialog:null
       };
    },
    computed: {
       imageUrl() {
-         return `http://localhost/fireblogs-api/public/images/${this.img}`;
+         return `http://localhost/fireblogs-api/public/images/${this.imgpath}`;
       },
    },
+   created(){
+      this.getData();
+   },
    methods: {
+      getData(){
+         axios.get(`/post/${this.id}`).then((res) => {
+            console.log(res)
+            this.title = res.data.name;
+            this.body = res.data.body;
+            this.imgpath = res.data.image_path;
+            this.summary=res.data.excerpt;
+         });
+      },
       onFileSelected(event) {
          this.selectedFile = event.target.files[0];
          this.preview = true;
