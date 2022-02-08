@@ -36,12 +36,14 @@
                            <v-card-title class="tw-text-center text-h5">
                               Edit Profile Picture
                            </v-card-title>
-                           <v-img
-                              v-if="userSelected"
-                              :src="imageUrl"
-                              contain
-                              transition="fade-transition"
-                           ></v-img>
+                           <div class="tw-px-4 tw-w-full ">
+                              <v-img
+                                 v-if="userSelected"
+                                 :src="imageUrl"
+                                 transition="fade-transition"
+                                 class="tw-h-24 tw-w-24 tw-mx-auto tw-rounded-full"
+                              ></v-img>
+                           </div>
                            <div class="tw-p-4">
                               <input
                                  type="file"
@@ -50,10 +52,16 @@
                                  class=""
                                  accept=".png, .jpg, .jpeg"
                               />
-                              
                            </div>
-                           <div class="tw-flex tw-flex-row-reverse tw-p-4 tw-pt-0">
-                              <v-btn right color="primary" :disabled="!userSelected" >Upload</v-btn>
+                           <div
+                              class="tw-flex tw-flex-row-reverse tw-p-4 tw-pt-0"
+                           >
+                              <v-btn
+                                 right
+                                 color="primary"
+                                 :disabled="!userSelected"
+                                 >Upload</v-btn
+                              >
                            </div>
                         </v-card>
                      </v-dialog>
@@ -77,7 +85,7 @@
                >
                <textarea
                   name=""
-                  id=""
+                  id="Bio"
                   class="tw-bg-gray-100 tw-px-2 tw-py-1 tw-border-2 tw-border-solid tw-border-gray-300 tw-rounded-md"
                   placeholder="Type your bio here..."
                   rows="4"
@@ -129,21 +137,20 @@
 </template>
 <script>
 export default {
-   data(){
-      return{
-         selectedFile:"",
-         imageUrl:"",
-         userSelected:null
-      }
+   data() {
+      return {
+         selectedFile: "",
+         imageUrl: "",
+         userSelected: null,
+      };
    },
-   methods:{
-      onFileSelected(e){
+   methods: {
+      onFileSelected(e) {
          this.selectedFile = e.target.files[0];
-         
-         
+
          this.imageUrl = URL.createObjectURL(this.selectedFile);
          this.userSelected = true;
-      }
-   }
-}
+      },
+   },
+};
 </script>

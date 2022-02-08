@@ -4,7 +4,7 @@
       class="tw-flex tw-w-full tw-items-center tw-border-2 tw-border-white tw-mb-4 tw-cursor-pointer hover:tw-border-black"
       style="height: 140px"
    >
-      <div class="content tw-flex-1 tw-px-4 tw-py-2 tw-flex-col">
+      <div class="content tw-flex-1 tw-w-3/4 tw-px-4 tw-py-2 tw-flex-col">
          <div class="username tw-flex tw-mt-4">
             <img
                src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
@@ -16,16 +16,16 @@
             </h6>
          </div>
          <div class="title">
-            <h2 class="tw-font-bold tw-text-xl">
+            <h2 class="tw-font-bold tw-text-xl tw-truncate">
                {{ title }}
             </h2>
          </div>
-         <div class="summary">
-            <p class="tw-opacity-75">
+         <div class="summary  tw-w-full">
+            <p class="tw-opacity-75 tw-truncate    " >
                {{ summary }}
             </p>
          </div>
-         <div class="date tw-flex tw-items-baseline tw-py-2">
+         <div class="date tw-flex tw-items-baseline  tw-py-2">
             <p class="tw-opacity-75 tw-text-sm">{{ dateFormat }}</p>
          </div>
       </div>

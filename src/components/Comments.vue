@@ -10,45 +10,58 @@
                alt=""
             />
             <div class="tw-mx-2">
-               <h1 class="tw-text-base">{{userName}}</h1>
-               <p class="tw-text-xs tw-opacity-60">{{ dateFormat}}</p>
+               <h1 class="tw-text-base">{{ userName }}</h1>
+               <p class="tw-text-xs tw-opacity-60">{{ dateFormat }}</p>
             </div>
          </div>
          <div class="tw-my-auto">
             <!-- <button @click.stop="!report"></button> -->
-            
-               <v-menu offset-y absolute>
-                  <template v-slot:activator="{ on, attrs }">
-                     <v-btn depressed color="#fff" v-bind="attrs" v-on="on">
-                        <img
-                           src="../assets/Logo/3-horizontal-dots.png"
-                           class="tw-h-1 "
-                           alt=""
-                        />
-                     </v-btn>
-                  </template>
-                  <v-list>
-                     <v-list-item >
-                        <v-list-item-title><v-btn depressed color="#fff">
-                        Report this response</v-btn></v-list-item-title>
-                     </v-list-item>
-                  </v-list>
-                  
-               </v-menu>
-            
+
+            <v-menu offset-y absolute>
+               <template v-slot:activator="{ on, attrs }">
+                  <v-btn depressed color="#fff" v-bind="attrs" v-on="on">
+                     <img
+                        src="../assets/Logo/3-horizontal-dots.png"
+                        class="tw-h-1"
+                        alt=""
+                     />
+                  </v-btn>
+               </template>
+               <v-list>
+                  <v-list-item>
+                     <v-list-item-title
+                        ><v-btn depressed color="#fff">
+                           Report this response</v-btn
+                        ></v-list-item-title
+                     >
+                  </v-list-item>
+                  <v-list-item v-if="deleteButtonBoolean">
+                     <v-list-item-title
+                        ><v-btn
+                           color="red darken-4"
+                           dark
+                           block
+                           depressed
+                           @click="deleteComment"
+                        >
+                           Delete Comment</v-btn
+                        ></v-list-item-title
+                     >
+                  </v-list-item>
+               </v-list>
+            </v-menu>
          </div>
       </div>
       <div class="tw-my-1">
-         <p v-html="body">
-           
-         </p>
+         <p v-html="body"></p>
       </div>
    </div>
 </template>
 <script>
-import moment from 'moment'
+import moment from "moment";
+import axios from "axios";
 export default {
-   props:['body','userName','userId','loggedUserId','date'],
+   props: ["body", "userName", "userId", "loggedUserId", "date", "commentId"],
    data() {
       return {
          report: null,
@@ -60,7 +73,10 @@ export default {
          ],
       };
    },
-   computed:{
+   computed: {
+      deleteButtonBoolean() {
+         return this.userId == this.$store.getters.userId ? true : false;
+      },
       dateFormat() {
          return moment(this.date).calendar(new Date(), {
             sameDay: "[Today]",
@@ -71,6 +87,17 @@ export default {
             sameElse: "DD/MM/YYYY",
          });
       },
-   }
+   },
+   methods: {
+      deleteComment() {
+         axios.delete(`/comments/${this.commentId}/delete`, {
+            headers: {
+               Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+         }).then(()=>{
+            this.$emit('delete-comment',this.commentId);
+         });
+      },
+   },
 };
 </script>

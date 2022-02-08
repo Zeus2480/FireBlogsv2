@@ -11,7 +11,7 @@
                   width="50%"
                   hide-delimiter-background
                   show-arrows-on-hover
-                  touchless="true"
+                  
                   hide-delimiters
                   :show-arrows="false"
                >
@@ -71,6 +71,7 @@
                            name="search"
                            placeholder="Search"
                            v-model.trim="query"
+                           @keyup.enter="search"
                         />
                         <button
                            type="submit"
@@ -115,7 +116,7 @@
                   </div>
                </v-tab-item>
                <v-tab-item value="recommended">
-                  <div class="tw-mt-4 heightmin">
+                  <div class="tw-mt-4 heightmin tw-px-10">
                      <horizontal-blog-card
                         v-for="(blog, index) in publishedBlogs"
                         :key="index"

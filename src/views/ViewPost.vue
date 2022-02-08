@@ -87,11 +87,11 @@
                      <h1 class="tw-text-base">Faizan Siddiqui</h1>
                   </div>
                   <div class="tw-flex tw-items-center">
-                     <h1 class="tw-text-sm tw-opacity-75">{{dateFormat}}</h1>
+                     <h1 class="tw-text-sm tw-opacity-75">{{ dateFormat }}</h1>
                   </div>
                </div>
                <div class="tw-flex tw-mb-20">
-                  <p class="tw-breal-all" v-html="body"></p>
+                  <p class="tw-breal-all tw-overflow-hidden" v-html="body"></p>
                </div>
                <div></div>
             </div>
@@ -227,10 +227,12 @@
                   cols="39"
                   rows="4"
                   v-model="commentBody"
+                  @keyup.13.stop="comment"
                ></textarea>
                <div class="tw-flex tw-items-center">
                   <v-btn
                      @click="comment"
+                     @keyup.enter="comment"
                      dark
                      color="#2A73C5"
                      block
@@ -249,6 +251,8 @@
                   :userId="comment.user_id"
                   :loggedUserId="loggedInUserId"
                   :date="comment.created_at"
+                  :commentId="comment.id"
+                  @delete-comment="deleteComment"
                ></Comment>
             </div>
          </div>
@@ -259,7 +263,7 @@
 import axios from "axios";
 import Comment from "../components/Comments.vue";
 import MoreFromUser from "../components/MoreFromUser.vue";
-import moment from 'moment'
+import moment from "moment";
 export default {
    props: ["id"],
    components: {
@@ -298,7 +302,7 @@ export default {
          loggedInUserId: null,
          loading: false,
          dialog: false,
-         date:null
+         date: null,
       };
    },
    created() {
@@ -309,6 +313,13 @@ export default {
       this.getCommentsArray();
    },
    methods: {
+      deleteComment(commentId) {
+        
+          this.commentsArray = this.commentsArray.filter(
+            (comment) => comment.id !== commentId
+         );
+         // console.log(this.commentsArray);
+      },
       getUserID() {
          this.loggedInUserId = this.$store.getters.userId;
          // console.log(this.loggedInUserId);
@@ -320,13 +331,12 @@ export default {
             this.commentsArray = res.data.filter(
                (data) => data.post_id == this.id
             );
-            console.log(this.commentsArray);
+            // console.log(this.commentsArray);
          });
       },
       comment() {
          this.loading = true;
-         if(this.$store.getters.userName !== ""){
-
+         if (this.$store.getters.userName !== "") {
             axios
                .post(
                   `/post/${this.id}/comments`,
@@ -335,26 +345,23 @@ export default {
                   },
                   {
                      headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
                      },
                   }
                )
-               .then(() => {
-                  const data = {
-                     body: this.commentBody,
-                     user_name: this.$store.getters.userName,
-                     user_id: this.$store.getters.userId,
-                  };
-                  this.commentBody=""
-                  this.commentsArray.push(data);
+               .then((res) => {
+                  
+                 
+                  this.commentBody = "";
+                  this.commentsArray.unshift(res.data);
                })
                .finally(() => {
                   this.loading = false;
-                  this.commentBody=""
+                  this.commentBody = "";
                });
-         }
-         else{
-            this.dialog=true;
+         } else {
+            this.dialog = true;
          }
       },
       noOfLikes() {
@@ -394,7 +401,7 @@ export default {
             this.title = res.data.name;
             this.body = res.data.body;
             this.imgpath = res.data.image_path;
-            this.date=res.data.created_at
+            this.date = res.data.created_at;
          });
       },
       login() {
@@ -469,14 +476,12 @@ export default {
          this.follow = false;
       },
       followAlertFunction() {
-         if(this.$store.getters.userName !== ""){
-
+         if (this.$store.getters.userName !== "") {
             this.followAlert = true;
             this.settimeFollow();
             this.follow = true;
-         }
-         else{
-            this.dialog=true;
+         } else {
+            this.dialog = true;
          }
       },
       settimeFollow() {

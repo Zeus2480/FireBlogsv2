@@ -176,6 +176,9 @@ export default {
       this.loggedInMessage();
    },
    computed: {
+      // profilePictureCheck(){
+      //    if()
+      // },
       adminCheck() {
          if (this.userId === 1) {
             return true;
@@ -236,7 +239,7 @@ export default {
                      }
                   )
                   .then((res) => {
-                     console.log(res);
+                     // console.log(res);
                      this.userLoggedIn = true;
                      this.userName = res.data.name;
                      this.userId = res.data.id;
