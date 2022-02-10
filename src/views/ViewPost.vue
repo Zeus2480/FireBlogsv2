@@ -79,12 +79,12 @@
                <h1 class="tw-text-5xl tw-font-semibold">{{ title }}</h1>
                <div class="tw-flex">
                   <img
-                     src="../assets/images/profilepicture.jpg"
+                     :src="profilePictureCheck"
                      class="tw-h-8 tw-rounded-full tw-my-4"
                      alt=""
                   />
                   <div class="tw-flex tw-items-center tw-mx-2">
-                     <h1 class="tw-text-base">Faizan Siddiqui</h1>
+                     <h1 class="tw-text-base">{{writerName}}</h1>
                   </div>
                   <div class="tw-flex tw-items-center">
                      <h1 class="tw-text-sm tw-opacity-75">{{ dateFormat }}</h1>
@@ -120,10 +120,10 @@
                </div>
             </div>
 
-            <div class="tw-p-4">
+            <div class="tw-p-4 tw-mt-6">
                <div>
                   <img
-                     src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
+                     :src="profilePictureCheck"
                      class="tw-h-28 tw-rounded-full"
                      alt=""
                   />
@@ -131,7 +131,7 @@
                <div class="tw-flex tw-my-4">
                   <div>
                      <h1 class="tw-text-lg tw-text-black tw-font-medium">
-                        Olivia Fendrich
+                        {{writerName}}
                      </h1>
                      <p class="tw-text-sm tw-opacity-70 tw-text-black">
                         41 Followers
@@ -157,7 +157,7 @@
                   </div>
                </div>
                <div>
-                  <p>In my mind i am seth Rogan.</p>
+                  <p>{{writerBio}}</p>
                </div>
                <div class="tw-my-4 tw-flex">
                   <a href=""
@@ -271,6 +271,13 @@ export default {
       MoreFromUser,
    },
    computed: {
+       profilePictureCheck() {
+         if (this.writerImage) {
+            return `http://localhost/fireblogs-api/public/images/${this.writerImage}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      },
       imageUrl() {
          return `http://localhost/fireblogs-api/public/images/${this.imgpath}`;
       },
@@ -303,6 +310,12 @@ export default {
          loading: false,
          dialog: false,
          date: null,
+         writerImage:"",
+         writerName:"",
+         writerBio:"",
+         writerInstagram:"",
+         writerFacebook:"",
+         writerTwitter:"",
       };
    },
    created() {
@@ -331,7 +344,7 @@ export default {
             this.commentsArray = res.data.filter(
                (data) => data.post_id == this.id
             );
-            // console.log(this.commentsArray);
+            this.commentsArray=this.commentsArray.reverse();
          });
       },
       comment() {
@@ -398,10 +411,31 @@ export default {
       },
       getData() {
          axios.get(`/post/${this.id}`).then((res) => {
-            this.title = res.data.name;
-            this.body = res.data.body;
-            this.imgpath = res.data.image_path;
-            this.date = res.data.created_at;
+            // console.log(res)
+            this.title = res.data.post.name;
+            this.body = res.data.post.body;
+            this.imgpath = res.data.post.image_path;
+            this.date = res.data.post.created_at;
+            console.log(this.date)
+            console.log(res.data.user[0].name)
+            if(res.data.user[0].bio){
+               this.writerBio=res.data.user[0].bio
+            }
+            if(res.data.user[0].name){
+               this.writerName=res.data.user[0].name
+            }
+            if(res.data.user[0].image_path){
+               this.writerImage=res.data.user[0].image_path
+            }
+            if(res.data.user[0].social_links?.instagram){
+               this.writerBio=res.data.user[0].social_links.instagram
+            }
+            if(res.data.user[0].social_links?.facebook){
+               this.writerBio=res.data.user[0].social_links.facebook
+            }
+            if(res.data.user[0].social_links?.twitter){
+               this.writerBio=res.data.user[0].social_links.twitter
+            }
          });
       },
       login() {
@@ -487,16 +521,16 @@ export default {
       settimeFollow() {
          setTimeout(() => {
             this.followAlert = false;
-            console.log(this.followAlert);
+            // console.log(this.followAlert);
          }, 3000);
-         console.log(this.followAlert);
+         // console.log(this.followAlert);
       },
       settimeUnFollow() {
          setTimeout(() => {
             this.unFollowAlert = false;
-            console.log(this.followAlert);
+            // console.log(this.followAlert);
          }, 3000);
-         console.log(this.followAlert);
+         // console.log(this.followAlert);
       },
    },
 };

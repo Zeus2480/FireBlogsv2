@@ -6,7 +6,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userName: '',
-    userId: null
+    userId: null,
+    profilePicture:'',
+    
+
+
   },
   mutations: {
     setUserName(state, payload) {
@@ -14,6 +18,9 @@ export default new Vuex.Store({
     },
     setUserId(state, payload) {
       state.userId = payload.userId;
+    },
+    setProfilePicture(state, payload) {
+      state.profilePicture = payload.profilePicture;
     }
   },
   actions: {
@@ -24,6 +31,9 @@ export default new Vuex.Store({
     setUserName(context, payload) {
       context.commit('setUserName', payload)
     },
+    setProfilePicture(context, payload) {
+      context.commit('setProfilePicture', payload)
+    },
   },
   getters: {
     userName(state) {
@@ -32,6 +42,9 @@ export default new Vuex.Store({
     userId(state) {
       return state.userId;
     },
+    profilePicture(state){
+      return state.profilePicture
+    }
   },
   modules: {
   }

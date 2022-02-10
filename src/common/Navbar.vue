@@ -18,8 +18,8 @@
                   >
                      <div class="image tw-mx-auto tw-my-4">
                         <img
-                           src="../assets/images/profilepicture.jpg"
-                           class="tw-rounded-full tw-h-24"
+                           :src="profilePictureCheck"
+                           class="tw-rounded-full tw-w-24 tw-h-24"
                            alt=""
                         />
                      </div>
@@ -140,8 +140,8 @@
                   <li v-if="userName" class="link-item tw-pt-2">
                      <button @click.stop="drawer = !drawer">
                         <img
-                           src="../assets/images/profilepicture.jpg"
-                           class="tw-h-8 tw-rounded-full"
+                           :src="profilePictureCheck"
+                           class="tw-h-8 tw-w-8 tw-rounded-full"
                            alt=""
                         />
                      </button>
@@ -176,9 +176,14 @@ export default {
       this.loggedInMessage();
    },
    computed: {
-      // profilePictureCheck(){
-      //    if()
-      // },
+      profilePictureCheck(){
+         if(this.$store.getters.profilePicture!=null){
+            return `http://localhost/fireblogs-api/public/images/${this.$store.getters.profilePicture}`
+         }
+         else{
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      }, 
       adminCheck() {
          if (this.userId === 1) {
             return true;
@@ -216,6 +221,9 @@ export default {
                this.$store.dispatch("setUserName", {
                   userName: "",
                });
+               this.$store.dispatch("setProfilePicture", {
+                  profilePicture: "",
+               });
                this.$store.dispatch("setUserId", {
                   userId: null,
                });
@@ -243,6 +251,9 @@ export default {
                      this.userLoggedIn = true;
                      this.userName = res.data.name;
                      this.userId = res.data.id;
+                     // console.log(this.userId);
+                     // console.log(this.userName);
+
                      if (res.data.id === 1) {
                         this.admin = true;
                      }
@@ -251,6 +262,9 @@ export default {
                      });
                      this.$store.dispatch("setUserId", {
                         userId: this.userId,
+                     });
+                     this.$store.dispatch("setProfilePicture", {
+                        profilePicture: res.data.image_path,
                      });
                   });
             }

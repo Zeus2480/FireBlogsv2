@@ -28,9 +28,9 @@
                   </v-btn>
                </template>
                <v-list>
-                  <v-list-item>
+                  <v-list-item v-if="!deleteButtonBoolean">
                      <v-list-item-title
-                        ><v-btn depressed color="#fff">
+                        ><v-btn depressed color="#fff" @click="reportComment">
                            Report this response</v-btn
                         ></v-list-item-title
                      >
@@ -89,14 +89,26 @@ export default {
       },
    },
    methods: {
+      reportComment(){
+         axios.post(`/reported/${this.commentId}`,{},{
+            headers:{
+               Authorization: "Bearer "+localStorage.getItem("token")
+            }
+         }).then((res)=>{
+            console.log(res)
+         })
+      },
+
       deleteComment() {
-         axios.delete(`/comments/${this.commentId}/delete`, {
-            headers: {
-               Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-         }).then(()=>{
-            this.$emit('delete-comment',this.commentId);
-         });
+         axios
+            .delete(`/comments/${this.commentId}/delete`, {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then(() => {
+               this.$emit("delete-comment", this.commentId);
+            });
       },
    },
 };

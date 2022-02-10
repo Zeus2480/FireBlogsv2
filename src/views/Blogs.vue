@@ -11,7 +11,6 @@
                   width="50%"
                   hide-delimiter-background
                   show-arrows-on-hover
-                  
                   hide-delimiters
                   :show-arrows="false"
                >
@@ -186,23 +185,23 @@ export default {
    },
    methods: {
       getPublishBlogs() {
-         axios
-            .get("/post/publish")
-            .then((res) => {
-               if (res.data != "no post is published") {
-                  this.publishedBlogs = res.data;
-               }
-            });
+         axios.get("/post/publish").then((res) => {
+            if (res.data != "no post is published") {
+               this.publishedBlogs = res.data;
+            }
+         });
       },
       changeTab() {
          this.tab = "recommended";
       },
       search() {
          console.log(this.query);
-         this.$router.push({
-            name: "search",
-            params: { query: this.query },
-         });
+         if (this.query != "") {
+            this.$router.push({
+               name: "search",
+               params: { query: this.query },
+            });
+         }
       },
    },
 };

@@ -49,17 +49,9 @@
                               </div>
                            </template>
                            <v-card>
-                              <v-card-title>Comment</v-card-title>
+                              <v-card-title>Comment by {{commentedBy}}</v-card-title>
                               <v-card-text
-                                 >this is the commentads dsa dsa dass ds dsad s
-                                 s asdasd sd s fsd fs sduys gdhf ghfsdgy sfdghs
-                                 sdgssfdhgfhjsfdghjg hjsg shj gsdhjg hjsg jhsfd
-                                 ghjg sfhd gsfdhjg shjs fghjsf gshg fhjf ghjsfd
-                                 ghj ghs d dsfh gdshg fdhg fhd hjsghsfd gh
-                                 jgsfdhj ghjgjh gfhjsg fjsdg fsdg jhfdsgj hfgdh
-                                 gfdhj gfshg fsg fgasj fgsdhj gfsdjhg fjshg
-                                 fhsjg hfsghj ggsfhd jhsfgdhj sgdh
-                                 ghfsdgh</v-card-text
+                                 >{{comment}}</v-card-text
                               >
                               <v-card-actions>
                                  <v-spacer></v-spacer>
@@ -112,6 +104,7 @@
 </template>
 <script>
 export default {
+   props:['comment','commentedBy','reportId'],
    data() {
       return {
          isBlocked: false,

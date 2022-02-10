@@ -7,7 +7,7 @@
                <h1 class="tw-font-semibold tw-text-4xl">Admin Panel</h1>
             </div>
             <div class="tw-my-6">
-               <v-tabs color="blaack accent-4" grow right v-model="tab">
+               <v-tabs color="blaack accent-4" grow right>
                   <div class="tw-flex tw-justify-between">
                      <div class="tw-flex">
                         <v-tab href="#publish" dark class="tw-text-black"
@@ -50,46 +50,24 @@
                   </v-tab-item>
                   <v-tab-item value="publish">
                      <div class="tw-mt-4">
-                        <PublishBar v-for="(blog,index) in allBlogs"
-                        :key="index"
-                        :id="blog.id"
-                        :title="blog.name"
-                        :status="blog.status"
+                        <PublishBar
+                           v-for="(blog, index) in allBlogs"
+                           :key="index"
+                           :id="blog.id"
+                           :title="blog.name"
+                           :status="blog.status"
                         ></PublishBar>
-                        
                      </div>
                   </v-tab-item>
                   <v-tab-item value="report">
                      <div class="tw-mt-4 tw-w-full">
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
-                        <ReportBar></ReportBar>
+                        <ReportBar
+                           v-for="(report, index) in allReports"
+                           :key="index"
+                           :comment="report.comments.body"
+                           :commentedBy="report.comments.user_name"
+                           :reportId="report.id"
+                        ></ReportBar>
                      </div>
                   </v-tab-item>
                </v-tabs>
@@ -102,30 +80,45 @@
 import FollowTab from "../components/FollowTab.vue";
 import PublishBar from "../components/PublishBar.vue";
 import ReportBar from "../components/ReportBar.vue";
-import axios from 'axios'
+import axios from "axios";
 export default {
-   data(){
-      return{
-         allBlogs:[]
-      }
+   data() {
+      return {
+         allBlogs: [],
+         allReports: [],
+      };
    },
-   created(){
+   created() {
       this.getPublishBlogs();
+      this.getReportedComments();
    },
-   methods:{
-      getPublishBlogs(){
-         axios.get('/post',
-            {
+   methods: {
+      getReportedComments() {
+         axios
+            .get("/reported", {
                headers: {
                   Authorization: "Bearer " + localStorage.getItem("token"),
                },
-            }).then(res=>{
-               this.allBlogs=res.data
-               console.log(this.allBlogs);
-            }).catch(err=>{
-               console.log(err)
             })
-      }
+            .then((res) => {
+               this.allReports = res.data;
+            });
+      },
+      getPublishBlogs() {
+         axios
+            .get("/post", {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then((res) => {
+               this.allBlogs = res.data;
+               console.log(this.allBlogs);
+            })
+            .catch((err) => {
+               console.log(err);
+            });
+      },
    },
    components: {
       FollowTab,

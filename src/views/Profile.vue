@@ -4,12 +4,12 @@
       <div class="tw-w-screen tw-px-14 tw-my-12">
          <div class="tw-pt-8 tw-flex">
             <img
-               src="../assets/images/profilepicture.jpg"
+               :src="profilePictureCheck"
                class="tw-h-28 tw-rounded-full"
                alt=""
             />
             <div class="tw-ml-8 tw-my-auto">
-               <h1 class="tw-text-2xl tw-font-medium">{{userName}}</h1>
+               <h1 class="tw-text-2xl tw-font-medium">{{ userName }}</h1>
                <p class="tw-opacity-70">328 Followers</p>
                <v-btn
                   @click="editprofile"
@@ -22,7 +22,7 @@
             </div>
          </div>
          <div class="tw-mt-8">
-            <v-tabs color="black accent-4" left >
+            <v-tabs color="black accent-4" left>
                <div class="tw-flex tw-justify-between tw-w-full">
                   <div
                      class="tw-flex tw-border-b-2 tw-w-full tw-border-gray-300 tw-border-solid"
@@ -40,15 +40,17 @@
                </div>
 
                <v-tab-item value="blogs">
-                  <div v-if="!userBlogs" class="tw-w-full">
+                  <div v-if="userBlogs.length==0" class="tw-w-full">
                      <div class="tw-flex tw-justify-center tw-mt-24 tw-mx-auto">
-                        <div >
-                        <h1 class="tw-text-xl">You dont have any blogs</h1>
-                        <div class="tw-flex tw-justify-center tw-mt-6">
-                        <router-link class="" to="/createblog"><v-btn dark color="green darken-1">Createblog</v-btn></router-link>
-
-                        </div>
-
+                        <div>
+                           <h1 class="tw-text-xl">You dont have any blogs</h1>
+                           <div class="tw-flex tw-justify-center tw-mt-6">
+                              <router-link class="" to="/createblog"
+                                 ><v-btn dark color="green darken-1"
+                                    >Createblog</v-btn
+                                 ></router-link
+                              >
+                           </div>
                         </div>
                      </div>
                   </div>
@@ -56,13 +58,15 @@
                      v-else
                      class="tw-grid tw-grid-cols-1 tw-my-4 tw-gap-10 sm:tw-grid-cols-2 lg:tw-grid-cols-3 xl:tw-grid-cols-4 xl:tw-my-20"
                   >
-                     <BaseCard @delete-post="deleteBlog" v-for="(blog ,index) in userBlogs"
-                     :key="index"
-                     :id="blog.id"
-                     :body="blog.body"
-                     :summary="blog.excerpt"
-                     :title="blog.name"
-                     :img="blog.image_path"
+                     <BaseCard
+                        @delete-post="deleteBlog"
+                        v-for="(blog, index) in userBlogs"
+                        :key="index"
+                        :id="blog.id"
+                        :body="blog.body"
+                        :summary="blog.excerpt"
+                        :title="blog.name"
+                        :img="blog.image_path"
                      ></BaseCard>
                   </div>
                </v-tab-item>
@@ -105,8 +109,17 @@ export default {
          blogsList: [],
          userBlogs: [],
          userId: "",
-         userName:""
+         userName: "",
       };
+   },
+   computed: {
+      profilePictureCheck() {
+         if (this.$store.getters.profilePicture != null) {
+            return `http://localhost/fireblogs-api/public/images/${this.$store.getters.profilePicture}`;
+         } else {
+            return `https://i.ibb.co/TPmLQyP/user.png`;
+         }
+      },
    },
    created() {
       this.getMyBlogs();
@@ -115,10 +128,8 @@ export default {
       editprofile() {
          this.$router.push("/editprofile");
       },
-      deleteBlog(id){
-          this.userBlogs = this.userBlogs.filter(
-                        (blog) => blog.id !== id
-                     );
+      deleteBlog(id) {
+         this.userBlogs = this.userBlogs.filter((blog) => blog.id !== id);
       },
       getMyBlogs() {
          axios
@@ -133,7 +144,7 @@ export default {
             )
             .then((res) => {
                this.id = res.data.id;
-               this.userName=res.data.name
+               this.userName = res.data.name;
                axios
                   .get("/post/publish")
                   .then((res) => {
