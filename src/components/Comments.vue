@@ -5,7 +5,7 @@
       <div class="tw-flex tw-justify-between tw-mt-2">
          <div class="tw-flex">
             <img
-               src="../assets/images/profilepicture.jpg"
+               :src="profilePictureCheck"
                class="tw-h-8 tw-my-auto tw-rounded-full"
                alt=""
             />
@@ -61,7 +61,7 @@
 import moment from "moment";
 import axios from "axios";
 export default {
-   props: ["body", "userName", "userId", "loggedUserId", "date", "commentId"],
+   props: ["body", "userName", "userId", "loggedUserId", "date", "commentId","profilePicture"],
    data() {
       return {
          report: null,
@@ -74,6 +74,13 @@ export default {
       };
    },
    computed: {
+       profilePictureCheck() {
+         if (this.profilePicture) {
+            return `http://localhost/fireblogs-api/public/images/${this.profilePicture}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      },
       deleteButtonBoolean() {
          return this.userId == this.$store.getters.userId ? true : false;
       },

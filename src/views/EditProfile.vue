@@ -3,9 +3,7 @@
       <Navbar></Navbar>
       <div class="tw-mx-32 tw-mt-14">
          <div class="tw-px-24">
-            <h1 class="tw-text-2xl tw-font-semibold">
-               Welcome Faizan Siddiqui
-            </h1>
+            <h1 class="tw-text-2xl tw-font-semibold">Welcome {{ userName }}</h1>
             <div class="tw-my-6 tw-flex">
                <img
                   :src="profilePictureCheck"
@@ -145,6 +143,7 @@
 </template>
 <script>
 import axios from "axios";
+import Toastify from "toastify-js";
 export default {
    data() {
       return {
@@ -173,6 +172,7 @@ export default {
    },
    methods: {
       upload() {
+         this.uploadLoading = true;
          const formData = new FormData();
          formData.append("name", this.userName);
          if (this.bio) {
@@ -204,6 +204,15 @@ export default {
             })
             .then((res) => {
                console.log(res);
+               console.log(123);
+               Toastify({
+                  text: "This is a toast",
+                  
+                  duration: 3000,
+               }).showToast();
+            })
+            .finally(() => {
+               this.uploadLoading = false;
             });
       },
       getProfile() {
@@ -220,7 +229,7 @@ export default {
                this.instagram = res.data.instagram;
 
                this.twitter = res.data.youtube;
-               
+
                if (!res.data.facebook) {
                   this.facebook = "";
                } else {
@@ -245,6 +254,20 @@ export default {
             const formData = new FormData();
             formData.append("image", this.selectedFile);
             formData.append("name", this.$store.getters.userName);
+
+            if (this.bio) {
+               formData.append("bio", this.bio);
+            }
+            if (this.instagram) {
+               // console.log(this.instagram)
+               formData.append("instagram", this.instagram);
+            }
+            if (this.facebook !== "") {
+               formData.append("facebook", this.facebook);
+            }
+            if (this.twitter !== "") {
+               formData.append("youtube", this.twitter);
+            }
             axios
                .post("/upload", formData, {
                   headers: {

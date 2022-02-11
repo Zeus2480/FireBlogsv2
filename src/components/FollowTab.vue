@@ -7,21 +7,21 @@
             <div class="tw-flex">
                <div class="tw-flex">
                   <img
-                     src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
+                     :src="profilePictureCheck"
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
-                  <div class="tw-w-52 tw-my-auto ">
+                  <div class="tw-w-52 tw-my-auto">
                      <h3
-                        class="tw-text-black   tw-my-auto tw-ml-6 tw-font-medium"
+                        class="tw-text-black tw-my-auto tw-ml-6 tw-font-medium"
                      >
-                        Olivia Rodrigo
+                        {{ userName }}
                      </h3>
                   </div>
                </div>
                <div class="tw-flex tw-mx-16">
                   <h2 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                      Blogs 12
+                     Blogs {{ noOfBlogs }}
                   </h2>
                   <h2 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
                      Followers 466
@@ -37,7 +37,22 @@
 </template>
 <script>
 export default {
-   props: ["followingBoolean"],
+   props: [
+      "followingBoolean",
+      "userName",
+      "profilePicture",
+      "noOfBlogs",
+      "noOfFollowers",
+   ],
+   computed: {
+      profilePictureCheck() {
+         if (this.profilePicture) {
+            return `http://localhost/fireblogs-api/public/images/${this.profilePicture}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      },
+   },
    methods: {
       redirect() {
          this.$router.push({

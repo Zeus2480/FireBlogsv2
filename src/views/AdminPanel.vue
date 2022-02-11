@@ -7,21 +7,21 @@
                <h1 class="tw-font-semibold tw-text-4xl">Admin Panel</h1>
             </div>
             <div class="tw-my-6">
-               <v-tabs color="blaack accent-4" grow right>
-                  <div class="tw-flex tw-justify-between">
-                     <div class="tw-flex">
+               <v-tabs color="blaack accent-4"  left>
+                  <div class="tw-flex tw-justify-between tw-w-full">
+                     <div class="tw-flex tw-border-b-2 tw-w-full tw-border-gray-300 tw-border-solid">
                         <v-tab href="#publish" dark class="tw-text-black"
                            ><v-badge color="green" :content="allBlogs.length"
                               >Publish</v-badge
                            ></v-tab
                         >
                         <v-tab dark href="#report"
-                           ><v-badge color="green" content="6"
+                           ><v-badge color="green" :content="allReports.length"
                               >Reports</v-badge
                            ></v-tab
                         >
                         <v-tab dark href="#users"
-                           ><v-badge color="green" :content="allBlogs.length"
+                           ><v-badge color="green" :content="allUsers.length"
                               >Users</v-badge
                            ></v-tab
                         >
@@ -30,22 +30,12 @@
 
                   <v-tab-item value="users">
                      <div class="tw-w-full tw-my-8 tw-mb-10">
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
-                        <FollowTab></FollowTab>
+                        <FollowTab v-for="(user,index) in allUsers"
+                        :key="index"
+                        :userName="user.name"
+                        :profilePicture="user.image_path"
+                        :noOfBlogs="user.posts_count"></FollowTab>
+                        
                      </div>
                   </v-tab-item>
                   <v-tab-item value="publish">
@@ -56,6 +46,8 @@
                            :id="blog.id"
                            :title="blog.name"
                            :status="blog.status"
+                           :userName="blog.users.name"
+                           :profilePicture="blog.users.image_path"
                         ></PublishBar>
                      </div>
                   </v-tab-item>
@@ -67,6 +59,12 @@
                            :comment="report.comments.body"
                            :commentedBy="report.comments.user_name"
                            :reportId="report.id"
+                           :postTitle="report.posts.name"
+                           :postId="report.posts.id"
+                           :commentedByProfilePicture="
+                              report.comments.users.image_path
+                           "
+                           :isBlocked="report.comments.users.status"
                         ></ReportBar>
                      </div>
                   </v-tab-item>
@@ -86,13 +84,23 @@ export default {
       return {
          allBlogs: [],
          allReports: [],
+         allUsers:[]
       };
    },
    created() {
       this.getPublishBlogs();
       this.getReportedComments();
+      this.getAllUsers();
    },
    methods: {
+      getAllUsers(){
+         axios.get('/ttt',{
+            headers:{
+               Authorization:"Bearer "+localStorage.getItem("token")
+         }}).then((res)=>{
+            this.allUsers=res.data;
+         })
+      },
       getReportedComments() {
          axios
             .get("/reported", {
@@ -101,6 +109,7 @@ export default {
                },
             })
             .then((res) => {
+               // console.log(res.data[0])
                this.allReports = res.data;
             });
       },
@@ -113,7 +122,7 @@ export default {
             })
             .then((res) => {
                this.allBlogs = res.data;
-               console.log(this.allBlogs);
+               // console.log(this.allBlogs);
             })
             .catch((err) => {
                console.log(err);

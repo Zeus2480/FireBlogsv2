@@ -157,10 +157,10 @@ export default {
       getData(){
          axios.get(`/post/${this.id}`).then((res) => {
             console.log(res)
-            this.title = res.data.name;
-            this.body = res.data.body;
-            this.imgpath = res.data.image_path;
-            this.summary=res.data.excerpt;
+            this.title = res.data.post.name;
+            this.body = res.data.post.body;
+            this.imgpath = res.data.post.image_path;
+            this.summary=res.data.post.excerpt;
          });
       },
       onFileSelected(event) {

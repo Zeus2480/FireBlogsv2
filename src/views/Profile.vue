@@ -33,10 +33,7 @@
                      <v-tab dark href="#followers">Followers</v-tab>
                      <v-tab dark href="#following">Following</v-tab>
                   </div>
-                  <div class="search tw-absolute tw-right-0">
-                     <!-- component -->
-                     <!-- This is an example component -->
-                  </div>
+
                </div>
 
                <v-tab-item value="blogs">

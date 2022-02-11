@@ -7,7 +7,7 @@
       <div class="content tw-flex-1 tw-w-3/4 tw-px-4 tw-py-2 tw-flex-col">
          <div class="username tw-flex tw-mt-4">
             <img
-               src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
+               :src="profilePictureCheck"
                class="tw-rounded-full tw-h-6"
                alt=""
             />
@@ -20,12 +20,12 @@
                {{ title }}
             </h2>
          </div>
-         <div class="summary  tw-w-full">
-            <p class="tw-opacity-75 tw-truncate    " >
+         <div class="summary tw-w-full">
+            <p class="tw-opacity-75 tw-truncate">
                {{ summary }}
             </p>
          </div>
-         <div class="date tw-flex tw-items-baseline  tw-py-2">
+         <div class="date tw-flex tw-items-baseline tw-py-2">
             <p class="tw-opacity-75 tw-text-sm">{{ dateFormat }}</p>
          </div>
       </div>
@@ -54,6 +54,13 @@ export default {
    computed: {
       imageUrl() {
          return `http://localhost/fireblogs-api/public/images/${this.image}`;
+      },
+      profilePictureCheck() {
+         if (this.profilePicture) {
+            return `http://localhost/fireblogs-api/public/images/${this.profilePicture}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
       },
       dateFormat() {
          return moment(this.date).calendar(new Date(), {

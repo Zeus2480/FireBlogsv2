@@ -7,25 +7,23 @@
             <div class="tw-flex">
                <div class="tw-flex">
                   <img
-                     src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
+                     :src="profilePictureCheck"
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
-                  <div class="tw-w-52 tw-my-auto ">
+                  <div class="tw-w-52 tw-my-auto">
                      <h3
-                        class="tw-text-black   tw-my-auto tw-ml-6 tw-font-medium"
+                        class="tw-text-black tw-my-auto tw-ml-6 tw-font-medium"
                      >
-                        Olivia Rodrigo
+                       {{commentedBy}}
                      </h3>
                   </div>
                </div>
                <div class="tw-flex tw-mx-2 set-width">
                   <h3
-                     class="tw-text-black tw-truncate tw-my-auto tw-mx-6 tw-font-medium"
-                  >
-                     This the titleee shgj hjasg hsf sfdhj gsfhg ffhsg yshd dsf
-                     fsdj fdhjk hfdsj gfhj gfsshg dfshgdfh jskdhgfsajd fhsajk
-                     fkHFJDSFHSAJ FHSJK AFHHSDAGF GJSKH AJKHSAJFAN BCXN BDSN
+                     class="tw-text-black tw-truncate tw-my-auto tw-bg-red tw-mx-6 tw-font-medium"
+                  ><router-link :to="bloglink" class="hover:tw-bg-red" >{{postTitle}}</router-link>
+                    
                   </h3>
                </div>
             </div>
@@ -49,10 +47,10 @@
                               </div>
                            </template>
                            <v-card>
-                              <v-card-title>Comment by {{commentedBy}}</v-card-title>
-                              <v-card-text
-                                 >{{comment}}</v-card-text
+                              <v-card-title
+                                 >Comment by {{ commentedBy }}</v-card-title
                               >
+                              <v-card-text>{{ comment }}</v-card-text>
                               <v-card-actions>
                                  <v-spacer></v-spacer>
                                  <v-btn
@@ -70,32 +68,26 @@
                   </div>
                </div>
                <div>
-                  <v-btn v-if="!isBlocked" dark @click="publish" color="primary"
-                     >Block</v-btn
-                  >
+                 
                   <v-btn
-                     v-if="isBlocked"
-                     disabled
-                     @click="publish"
+                    
+                     :disabled="!disabled"
+                     :dark="disabled"
+                     @click="block"
                      color="primary"
+                     :loading="isLoading"
                      >Block</v-btn
                   >
                   <v-btn
-                     dark
-                     v-if="isBlocked"
-                     @click="unPublish"
+                    :loading="isLoading"
+                    :disabled="disabled"
+                    :dark="!disabled"
+                     @click="block"
                      color="primary"
                      class="tw-ml-1"
                      >Unblock</v-btn
                   >
-                  <v-btn
-                     disabled
-                     v-if="!isBlocked"
-                     @click="unPublish"
-                     color="primary"
-                     class="tw-ml-1"
-                     >Unblock</v-btn
-                  >
+                  
                </div>
             </div>
          </div>
@@ -103,21 +95,51 @@
    </div>
 </template>
 <script>
+import axios from "axios"
 export default {
-   props:['comment','commentedBy','reportId'],
+   props: ["comment", "commentedBy", "reportId", "commentedByProfilePicture","postTitle","postId","isBlocked"],
    data() {
       return {
-         isBlocked: false,
+         
+         isLoading:false,
          dialog: null,
       };
    },
+   computed: {
+      disabled(){
+         if(this.isBlocked){
+            return true;
+         }
+         else{
+            return false
+         }
+      },
+      bloglink(){
+         return `/viewpost/${this.postId}`
+      },
+      profilePictureCheck() {
+         if (this.commentedByProfilePicture) {
+            return `http://localhost/fireblogs-api/public/images/${this.commentedByProfilePicture}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      },
+   },
    methods: {
-      publish() {
-         this.isBlocked = !this.isBlocked;
+      block(){
+         this.isLoading=true;
+         axios.post(`/block/${this.reportId}`,{},{
+            headers:{
+               Authorization:"Bearer "+localStorage.getItem("token")
+            }
+         }).then((res)=>{
+            this.isBlocked=!this.isBlocked;
+            console.log(res)
+         }).finally(()=>{
+            this.isLoading=false
+         })
       },
-      unPublish() {
-         this.isBlocked = !this.isBlocked;
-      },
+      
    },
 };
 </script>

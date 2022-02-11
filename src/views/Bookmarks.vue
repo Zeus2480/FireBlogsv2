@@ -15,6 +15,7 @@
                   :summary="blog.excerpt"
                   :image="blog.image_path"
                   :userName="blog.users.name"
+                  :profilePicture="blog.users.image_path"
                   
                ></HorizontalBlogCard>
             </div>

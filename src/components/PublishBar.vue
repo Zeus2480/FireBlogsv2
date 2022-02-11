@@ -7,7 +7,7 @@
             <div class="tw-flex">
                <div class="tw-flex">
                   <img
-                     src="../assets/images/1_g8SH3hZJHhJVYy6UqFjv1Q.jpeg"
+                     :src="profilePictureCheck"
                      class="tw-h-9 tw-rounded-full"
                      alt=""
                   />
@@ -15,7 +15,7 @@
                      <h3
                         class="tw-text-black tw-my-auto tw-ml-6 tw-font-medium"
                      >
-                        Olivia Rodrigo
+                        {{userName  }}
                      </h3>
                   </div>
                </div>
@@ -63,6 +63,15 @@ export default {
       return {
          isPublished: false,
       };
+   },
+   computed: {
+      profilePictureCheck() {
+         if (this.profilePicture) {
+            return `http://localhost/fireblogs-api/public/images/${this.profilePicture}`;
+         } else {
+            return "https://i.ibb.co/TPmLQyP/user.png";
+         }
+      },
    },
    methods: {
       unpublish() {

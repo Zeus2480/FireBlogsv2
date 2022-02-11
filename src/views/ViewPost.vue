@@ -84,7 +84,7 @@
                      alt=""
                   />
                   <div class="tw-flex tw-items-center tw-mx-2">
-                     <h1 class="tw-text-base">{{writerName}}</h1>
+                     <h1 class="tw-text-base">{{ writerName }}</h1>
                   </div>
                   <div class="tw-flex tw-items-center">
                      <h1 class="tw-text-sm tw-opacity-75">{{ dateFormat }}</h1>
@@ -107,7 +107,7 @@
                      transition="slide-x-reverse-transition"
                      type="success"
                   >
-                     You Followed Olivia Fendrich Sucessfully!
+                     You Followed {{ writerName }} Sucessfully!
                   </v-alert>
                   <v-alert
                      v-if="unFollowAlert"
@@ -115,7 +115,7 @@
                      transition="slide-x-reverse-transition"
                      type="success"
                   >
-                     You Unfollowed Olivia Fendrich Sucessfully!
+                     You Unfollowed {{ writerName }} Sucessfully!
                   </v-alert>
                </div>
             </div>
@@ -131,7 +131,7 @@
                <div class="tw-flex tw-my-4">
                   <div>
                      <h1 class="tw-text-lg tw-text-black tw-font-medium">
-                        {{writerName}}
+                        {{ writerName }}
                      </h1>
                      <p class="tw-text-sm tw-opacity-70 tw-text-black">
                         41 Followers
@@ -144,6 +144,7 @@
                         v-if="!follow"
                         color="primary"
                         small
+                        :loading="loading"
                         >Follow</v-btn
                      >
                      <v-btn
@@ -152,27 +153,28 @@
                         @click.stop="unFollowAlertFunction"
                         v-if="follow"
                         small
+                        :loading="loading"
                         >Unfollow</v-btn
                      >
                   </div>
                </div>
                <div>
-                  <p>{{writerBio}}</p>
+                  <p>{{ writerBio }}</p>
                </div>
                <div class="tw-my-4 tw-flex">
-                  <a href=""
+                  <a :href="writerInstagram" v-if="writerInstagram"
                      ><img
                         src="../assets/Logo/new-instagram-logo-glyph 1.png"
                         class="tw-h-5 tw-mr-2"
                         alt=""
                   /></a>
-                  <a href=""
+                  <a :href="writerFacebook" v-if="writerFacebook"
                      ><img
                         src="../assets/Logo/Vector (1).png"
                         alt=""
                         class="tw-h-5 tw-mr-2"
                   /></a>
-                  <a href=""
+                  <a :href="writerTwitter" v-if="writerTwitter"
                      ><img
                         src="../assets/Logo/icons8-twitter (2) 1.png"
                         alt=""
@@ -252,6 +254,7 @@
                   :loggedUserId="loggedInUserId"
                   :date="comment.created_at"
                   :commentId="comment.id"
+                  :profilePicture="comment.users.image_path"
                   @delete-comment="deleteComment"
                ></Comment>
             </div>
@@ -271,7 +274,7 @@ export default {
       MoreFromUser,
    },
    computed: {
-       profilePictureCheck() {
+      profilePictureCheck() {
          if (this.writerImage) {
             return `http://localhost/fireblogs-api/public/images/${this.writerImage}`;
          } else {
@@ -310,12 +313,13 @@ export default {
          loading: false,
          dialog: false,
          date: null,
-         writerImage:"",
-         writerName:"",
-         writerBio:"",
-         writerInstagram:"",
-         writerFacebook:"",
-         writerTwitter:"",
+         writerImage: "",
+         writerName: "",
+         writerBio: "",
+         writerInstagram: "",
+         writerFacebook: "",
+         writerTwitter: "",
+         following: null,
       };
    },
    created() {
@@ -324,11 +328,25 @@ export default {
       this.userBookmarked();
       this.noOfLikes();
       this.getCommentsArray();
+      this.userFollowing();
    },
    methods: {
+      followFunction() {},
+      userFollowing() {
+         if (this.$store.getters.userName != "") {
+            axios
+               .get(`/check/${this.id}`, {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               })
+               .then((res) => {
+                  this.follow = res.data;
+               });
+         }
+      },
       deleteComment(commentId) {
-        
-          this.commentsArray = this.commentsArray.filter(
+         this.commentsArray = this.commentsArray.filter(
             (comment) => comment.id !== commentId
          );
          // console.log(this.commentsArray);
@@ -344,7 +362,7 @@ export default {
             this.commentsArray = res.data.filter(
                (data) => data.post_id == this.id
             );
-            this.commentsArray=this.commentsArray.reverse();
+            this.commentsArray = this.commentsArray.reverse();
          });
       },
       comment() {
@@ -364,8 +382,7 @@ export default {
                   }
                )
                .then((res) => {
-                  
-                 
+                  console.log(res);
                   this.commentBody = "";
                   this.commentsArray.unshift(res.data);
                })
@@ -416,26 +433,27 @@ export default {
             this.body = res.data.post.body;
             this.imgpath = res.data.post.image_path;
             this.date = res.data.post.created_at;
-            console.log(this.date)
-            console.log(res.data.user[0].name)
-            if(res.data.user[0].bio){
-               this.writerBio=res.data.user[0].bio
+            // console.log(this.date);
+            // console.log(res.data.user[0].name);
+            if (res.data.user[0].bio) {
+               this.writerBio = res.data.user[0].bio;
             }
-            if(res.data.user[0].name){
-               this.writerName=res.data.user[0].name
+            if (res.data.user[0].name) {
+               this.writerName = res.data.user[0].name;
             }
-            if(res.data.user[0].image_path){
-               this.writerImage=res.data.user[0].image_path
+            if (res.data.user[0].image_path) {
+               this.writerImage = res.data.user[0].image_path;
             }
-            if(res.data.user[0].social_links?.instagram){
-               this.writerBio=res.data.user[0].social_links.instagram
+            if (res.data.user[0].instagram) {
+               this.writerInstagram = res.data.user[0].instagram;
             }
-            if(res.data.user[0].social_links?.facebook){
-               this.writerBio=res.data.user[0].social_links.facebook
+            if (res.data.user[0].facebook) {
+               this.writerFacebook = res.data.user[0].facebook;
             }
-            if(res.data.user[0].social_links?.twitter){
-               this.writerBio=res.data.user[0].social_links.twitter
+            if (res.data.user[0].youtube) {
+               this.writerTwitter = res.data.user[0].youtube;
             }
+            // console.log(this.writerInstagram);
          });
       },
       login() {
@@ -505,15 +523,49 @@ export default {
       //    this.follow = !this.follow;
       // },
       unFollowAlertFunction() {
-         this.unFollowAlert = true;
-         this.settimeUnFollow();
-         this.follow = false;
+         if (this.$store.getters.userName !== "") {
+            this.loading=true;
+            axios
+               .post(
+                  `/follow/${this.id}`,
+                  {},
+                  {
+                     headers: {
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then(() => {
+                  this.unFollowAlert = true;
+                  this.settimeUnFollow();
+                  this.follow = false;
+               }).finally(()=>{
+                  this.loading=false;
+               });
+         } else {
+            this.dialog = true;
+         }
       },
       followAlertFunction() {
          if (this.$store.getters.userName !== "") {
-            this.followAlert = true;
-            this.settimeFollow();
-            this.follow = true;
+            this.loading=true;
+            axios
+               .post(
+                  `/follow/${this.id}`,
+                  {},
+                  {
+                     headers: {
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then(() => {
+                  this.followAlert = true;
+                  this.settimeFollow();
+                  this.follow = true;
+               }).finally(()=>this.loading=false);
          } else {
             this.dialog = true;
          }

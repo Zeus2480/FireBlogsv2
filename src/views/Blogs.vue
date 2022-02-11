@@ -65,7 +65,7 @@
                         class="tw-pt-2 tw-relative tw-mx-auto tw-text-gray-600"
                      >
                         <input
-                           class="tw-border-2 tw-border-solid tw-border-gray-400 tw-bg-gray-200 tw-h-10 tw-px-5 tw-pr-16 tw-rounded-lg tw-text-sm tw-focus:outline-none"
+                           class="tw-border-2 tw-border-solid tw-border-gray-400 tw-bg-gray-00 tw-h-10 tw-px-5 tw-pr-16 tw-rounded-lg tw-text-sm tw-focus:outline-none"
                            type="search"
                            name="search"
                            placeholder="Search"
@@ -101,17 +101,36 @@
                </div>
 
                <v-tab-item value="following">
-                  <div class="tw-w-full heightmin tw-my-8 tw-mb-10">
+                  <div
+                     v-if="followingBLogs.length == 0"
+                     class="tw-w-full heightmin tw-my-8 tw-mb-10"
+                  >
                      <div class="tw-flex tw-justify-center">
                         <h2 class="">
                            Stories from the writers you follow will appear here.
                         </h2>
                      </div>
-                     <div class="tw-flex tw-justify-center tw-mt-8">
+                     <div
+                        v-if="followingBLogs.length == 0"
+                        class="tw-flex tw-justify-center tw-mt-8"
+                     >
                         <v-btn @click="changeTab" dark color="#048400"
                            >Browse recommended stories.</v-btn
                         >
                      </div>
+                  </div>
+                  <div v-else class="tw-w-full heightmin tw-my-8 tw-mb-10">
+                     <horizontal-blog-card
+                        v-for="(blog, index) in followingBLogs"
+                        :key="index"
+                        :id="blog.id"
+                        :title="blog.name"
+                        :summary="blog.excerpt"
+                        :image="blog.image_path"
+                        :userName="blog.users.name"
+                        :date="blog.created_at"
+                        :profilePicture="blog.users.image_path"
+                     ></horizontal-blog-card>
                   </div>
                </v-tab-item>
                <v-tab-item value="recommended">
@@ -125,6 +144,7 @@
                         :image="blog.image_path"
                         :userName="blog.users.name"
                         :date="blog.created_at"
+                        :profilePicture="blog.users.image_path"
                      ></horizontal-blog-card>
                   </div>
                </v-tab-item>
@@ -177,13 +197,28 @@ export default {
          tab: "tab-1",
          query: "",
          publishedBlogs: [],
+         followingBLogs: [],
       };
    },
 
    created() {
       this.getPublishBlogs();
+      this.getFollowingBlogs();
    },
    methods: {
+      getFollowingBlogs() {
+         axios
+            .get("/tt", {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then((res) => {
+               if (res.data) {
+                  this.followingBLogs = res.data;
+               }
+            });
+      },
       getPublishBlogs() {
          axios.get("/post/publish").then((res) => {
             if (res.data != "no post is published") {
