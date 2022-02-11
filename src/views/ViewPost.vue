@@ -2,6 +2,31 @@
    <div>
       <Navbar></Navbar>
       <div class="">
+         <div class="tw-relative">
+            <div class="tw-fixed tw-z-50 tw-top-10 tw-h-full tw-right-4">
+               <v-alert
+                  v-if="followAlert"
+                  class="tw-w-96"
+                  transition="slide-x-reverse-transition"
+                  type="success"
+                  dense
+               >
+                  You Followed {{ writerName }} Sucessfully!
+               </v-alert>
+               <v-alert
+                  v-if="unFollowAlert"
+                  class="tw-w-96"
+                  transition="slide-x-reverse-transition"
+                  type="success"
+               >
+                  You Unfollowed {{ writerName }} Sucessfully!
+               </v-alert>
+               <v-alert type="success"
+               class="tw-w-96">
+                  message
+               </v-alert>
+            </div>
+         </div>
          <v-row justify="center">
             <v-dialog v-model="dialog" max-width="400" max-height="1000">
                <v-card>
@@ -99,27 +124,6 @@
          <div
             class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-black tw-right-0"
          >
-            <div class="tw-relative">
-               <div class="tw-absolute tw-z-50 tw-h-full tw-right-4">
-                  <v-alert
-                     v-if="followAlert"
-                     class="tw-w-96"
-                     transition="slide-x-reverse-transition"
-                     type="success"
-                  >
-                     You Followed {{ writerName }} Sucessfully!
-                  </v-alert>
-                  <v-alert
-                     v-if="unFollowAlert"
-                     class="tw-w-96"
-                     transition="slide-x-reverse-transition"
-                     type="success"
-                  >
-                     You Unfollowed {{ writerName }} Sucessfully!
-                  </v-alert>
-               </div>
-            </div>
-
             <div class="tw-p-4 tw-mt-6">
                <div>
                   <img
@@ -382,9 +386,12 @@ export default {
                   }
                )
                .then((res) => {
-                  console.log(res);
-                  this.commentBody = "";
-                  this.commentsArray.unshift(res.data);
+                  if (res.data == "You are blocked") {
+                     console.log("blocked");
+                  } else {
+                     this.commentBody = "";
+                     this.commentsArray.unshift(res.data);
+                  }
                })
                .finally(() => {
                   this.loading = false;
@@ -524,7 +531,7 @@ export default {
       // },
       unFollowAlertFunction() {
          if (this.$store.getters.userName !== "") {
-            this.loading=true;
+            this.loading = true;
             axios
                .post(
                   `/follow/${this.id}`,
@@ -540,8 +547,9 @@ export default {
                   this.unFollowAlert = true;
                   this.settimeUnFollow();
                   this.follow = false;
-               }).finally(()=>{
-                  this.loading=false;
+               })
+               .finally(() => {
+                  this.loading = false;
                });
          } else {
             this.dialog = true;
@@ -549,7 +557,7 @@ export default {
       },
       followAlertFunction() {
          if (this.$store.getters.userName !== "") {
-            this.loading=true;
+            this.loading = true;
             axios
                .post(
                   `/follow/${this.id}`,
@@ -565,7 +573,8 @@ export default {
                   this.followAlert = true;
                   this.settimeFollow();
                   this.follow = true;
-               }).finally(()=>this.loading=false);
+               })
+               .finally(() => (this.loading = false));
          } else {
             this.dialog = true;
          }
@@ -574,14 +583,14 @@ export default {
          setTimeout(() => {
             this.followAlert = false;
             // console.log(this.followAlert);
-         }, 3000);
+         }, 1000);
          // console.log(this.followAlert);
       },
       settimeUnFollow() {
          setTimeout(() => {
             this.unFollowAlert = false;
             // console.log(this.followAlert);
-         }, 3000);
+         }, 1000);
          // console.log(this.followAlert);
       },
    },

@@ -1,5 +1,5 @@
 <template>
-   <div class="tw-bg-navy-blue tw-py-8 tw-mt-6">
+   <div class="tw-bg-navy-blue tw-py-8 ">
       <div class="logo tw-relative">
             <img src="../assets/Logo/meteor.png" class=" tw-absolute tw-left-12 tw-top-8 tw-h-12 tw-block" alt="">
         </div>

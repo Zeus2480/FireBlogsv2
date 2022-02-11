@@ -223,6 +223,7 @@ export default {
          axios.get("/post/publish").then((res) => {
             if (res.data != "no post is published") {
                this.publishedBlogs = res.data;
+               console.log(this.publishedBlogs)
             }
          });
       },
