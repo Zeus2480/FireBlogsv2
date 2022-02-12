@@ -108,7 +108,10 @@
             class="tw-flex tw-bg-navy-blue tw-justify-between tw-w-screen tw-z-50 tw-h-11 tw-fixed tw-top-0"
          >
             <div class="logo-image tw-mx-6 tw-py-1 tw-h-10">
+               <router-link to="/home">
                <img src="../assets/Logo/meteor.png" alt="" class="tw-h-full" />
+
+               </router-link>
             </div>
             <div
                class="nav-buttons tw-h-full tw-my-auto tw-mr-4 tw-flex tw-items-center"

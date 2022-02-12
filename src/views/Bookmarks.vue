@@ -6,6 +6,9 @@
             <div>
                <h2 class="tw-text-4xl tw-mx-4 tw-font-semibold">Bookmarks</h2>
             </div>
+            <div class="tw-mx-4 tw-mt-12" v-if="bookmarkedList.length==0">
+               <h1 class="tw-text-xl tw-font-medium">You dont have any bookmark...</h1>
+            </div>
             <div class="tw-my-8">
                <HorizontalBlogCard
                   v-for="(blog, index) in bookmarkedList"

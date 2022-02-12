@@ -52,14 +52,14 @@ uc                          <template>
                   Login
                </v-btn>
             </div>
-            <p class="tw-mt-4">
+            <p class="tw-mt-4 tw-flex tw-justify-center">
                Register instead?
                <router-link to="/register">
                   <span class="tw-text-blue-500">Register</span></router-link
                >
             </p>
          </form>
-         <p class="tw-text-center tw-text-gray-500 tw-text-xs tw-yellow-text">
+         <p class="tw-text-center tw-text-white tw-text-xs tw-yellow-text">
             &copy;2021 Fireblogs. All rights reserved.
          </p>
       </div>

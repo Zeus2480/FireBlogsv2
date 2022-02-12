@@ -1,6 +1,13 @@
 <template>
    <div>
       <Navbar></Navbar>
+      <div class="tw-relative">
+         <div class="tw-fixed tw-z-50 tw-top-10 tw-h-full tw-right-4">
+            <v-alert :type="alertType" v-if="showAlert" class="tw-w-96">
+               {{ alertMessage }}
+            </v-alert>
+         </div>
+      </div>
       <div class="tw-mx-32 tw-mt-14">
          <div class="tw-px-24">
             <h1 class="tw-text-2xl tw-font-semibold">Welcome {{ userName }}</h1>
@@ -143,7 +150,7 @@
 </template>
 <script>
 import axios from "axios";
-import Toastify from "toastify-js";
+
 export default {
    data() {
       return {
@@ -156,6 +163,9 @@ export default {
          instagram: "",
          twitter: "",
          facebook: "",
+         alertType: "",
+         alertMessage: "",
+         showAlert: null,
       };
    },
    created() {
@@ -204,16 +214,21 @@ export default {
             })
             .then((res) => {
                console.log(res);
-               console.log(123);
-               Toastify({
-                  text: "This is a toast",
-                  
-                  duration: 3000,
-               }).showToast();
+               if (res.status == 200) {
+                  this.alertMessage = "Profile updated sucessfully";
+                  this.alertType = "success";
+                  this.showAlert = true;
+                  this.alertTimeOut();
+               }
             })
             .finally(() => {
                this.uploadLoading = false;
             });
+      },
+      alertTimeOut() {
+         setTimeout(() => {
+            this.showAlert = false;
+         }, 1000);
       },
       getProfile() {
          axios
@@ -275,10 +290,16 @@ export default {
                   },
                })
                .then((res) => {
-                  this.userSelected = null;
-                  this.$store.dispatch("setProfilePicture", {
-                     profilePicture: res.data.image_path,
-                  });
+                  if (res.status == 200) {
+                     this.alertMessage = "Profile updated sucessfully";
+                     this.alertType = "success";
+                     this.showAlert = true;
+                     this.userSelected = null;
+                     this.$store.dispatch("setProfilePicture", {
+                        profilePicture: res.data.image_path,
+                     });
+                     this.alertTimeOut();
+                  }
                })
                .finally(() => {
                   (this.uploadLoading = false), (this.userSelected = null);

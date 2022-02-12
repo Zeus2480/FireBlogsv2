@@ -8,7 +8,7 @@
          <div class="username tw-flex tw-mt-4">
             <img
                :src="profilePictureCheck"
-               class="tw-rounded-full tw-h-6"
+               class="tw-rounded-full tw-w-6 tw-h-6"
                alt=""
             />
             <h6 class="tw-ml-2 tw-text-xs tw-pt-1 tw-font-medium">

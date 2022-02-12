@@ -102,7 +102,8 @@ export default {
                Authorization: "Bearer "+localStorage.getItem("token")
             }
          }).then((res)=>{
-            console.log(res)
+            console.log(res);
+            this.$emit('report')
          })
       },
 

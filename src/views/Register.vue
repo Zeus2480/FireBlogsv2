@@ -114,14 +114,14 @@
                         Register
                      </v-btn>
                   </div>
-                  <p class="tw-mt-4">
+                  <p class="tw-mt-4 tw-flex tw-flex-col tw-text-center tw-justify-center">
                      Already have an account? <br /><router-link to="/login">
                         <span class="tw-text-blue-500">Login</span></router-link
                      >
                   </p>
                </form>
                <p
-                  class="tw-text-center tw-text-gray-500 tw-text-xs tw-yellow-text"
+                  class="tw-text-center tw-text-white tw-text-xs tw-yellow-text"
                >
                   &copy;2022 Fireblogs. All rights reserved.
                </p>

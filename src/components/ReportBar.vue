@@ -134,6 +134,7 @@ export default {
             }
          }).then((res)=>{
             this.isBlocked=!this.isBlocked;
+            this.$emit('blocked-status-change');
             console.log(res)
          }).finally(()=>{
             this.isLoading=false

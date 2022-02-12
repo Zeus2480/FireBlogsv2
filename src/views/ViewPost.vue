@@ -4,26 +4,8 @@
       <div class="">
          <div class="tw-relative">
             <div class="tw-fixed tw-z-50 tw-top-10 tw-h-full tw-right-4">
-               <v-alert
-                  v-if="followAlert"
-                  class="tw-w-96"
-                  transition="slide-x-reverse-transition"
-                  type="success"
-                  dense
-               >
-                  You Followed {{ writerName }} Sucessfully!
-               </v-alert>
-               <v-alert
-                  v-if="unFollowAlert"
-                  class="tw-w-96"
-                  transition="slide-x-reverse-transition"
-                  type="success"
-               >
-                  You Unfollowed {{ writerName }} Sucessfully!
-               </v-alert>
-               <v-alert type="success"
-               class="tw-w-96">
-                  message
+               <v-alert :type="alertType" v-if="showAlert" class="tw-w-96">
+                  {{ alertMessage }}
                </v-alert>
             </div>
          </div>
@@ -185,14 +167,18 @@
                         class="tw-h-5 tw-mr-2"
                   /></a>
                </div>
-               <div class="more-from-user tw-mr-2">
+               <div class="more-from-user tw-mr-2" v-if="moreFromUser.length">
                   <h1 class="tw-font-semibold tw-text-xl">
-                     More From Olivia Fendrich
+                     More From {{writerName}}
                   </h1>
-                  <MoreFromUser></MoreFromUser>
-                  <MoreFromUser></MoreFromUser>
-                  <MoreFromUser></MoreFromUser>
-                  <MoreFromUser></MoreFromUser>
+                  <MoreFromUser
+                     v-for="(blog, index) in moreFromUser"
+                     :key="index"
+                     :title="blog.name"
+                     :image="blog.image_path"
+                     :id="blog.id"
+                  ></MoreFromUser>
+
                   <!-- <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser>
                   <MoreFromUser></MoreFromUser>
@@ -260,6 +246,7 @@
                   :commentId="comment.id"
                   :profilePicture="comment.users.image_path"
                   @delete-comment="deleteComment"
+                  @report="showReportAlert"
                ></Comment>
             </div>
          </div>
@@ -277,7 +264,14 @@ export default {
       Comment,
       MoreFromUser,
    },
+   watch:{
+      id(change){
+         this.id=change;
+         
+      }
+   },
    computed: {
+
       profilePictureCheck() {
          if (this.writerImage) {
             return `http://localhost/fireblogs-api/public/images/${this.writerImage}`;
@@ -324,6 +318,11 @@ export default {
          writerFacebook: "",
          writerTwitter: "",
          following: null,
+         showAlert: null,
+         alertMessage: "",
+         alertType: "",
+         moreFromUser: [],
+         writerId: "",
       };
    },
    created() {
@@ -335,7 +334,21 @@ export default {
       this.userFollowing();
    },
    methods: {
-      followFunction() {},
+      moreFromUserMethod() {
+         axios.get(`/all/${this.writerId}`).then((res) => {
+            if (res.data.length != 0) {
+               this.moreFromUser = res.data.filter(
+                  (listabc) => listabc.id != this.id
+               );
+            }
+         });
+      },
+      showReportAlert() {
+         this.alertMessage = "Reported Successfully";
+         this.alertType = "success";
+         this.showAlert = true;
+         this.alertTimeOut();
+      },
       userFollowing() {
          if (this.$store.getters.userName != "") {
             axios
@@ -387,6 +400,11 @@ export default {
                )
                .then((res) => {
                   if (res.data == "You are blocked") {
+                     this.showAlert = true;
+                     this.alertMessage = "You are blocked";
+                     this.alertType = "warning";
+                     this.alertTimeOut();
+
                      console.log("blocked");
                   } else {
                      this.commentBody = "";
@@ -401,37 +419,47 @@ export default {
             this.dialog = true;
          }
       },
+      alertTimeOut() {
+         setTimeout(() => {
+            this.showAlert = false;
+         }, 1000);
+      },
       noOfLikes() {
          axios.get(`/post/${this.id}/counts`).then((res) => {
             this.likeCount = res.data.like;
          });
       },
       userBookmarked() {
-         axios
-            .get(
-               `/check/bookmark?post_id=${this.id}&Aut=${localStorage.getItem(
-                  "token"
-               )}`,
-               {
+         if (this.$store.getters.userName !== "") {
+            axios
+               .get(
+                  `/check/bookmark?post_id=${
+                     this.id
+                  }&Aut=${localStorage.getItem("token")}`,
+                  {
+                     headers: {
+                        Authorization:
+                           "Bearer " + localStorage.getItem("token"),
+                     },
+                  }
+               )
+               .then((res) => {
+                  this.isBookmarked = res.data.is_bookmark;
+               });
+         }
+      },
+      userLiked() {
+         if (this.$store.getters.userName !== "") {
+            axios
+               .get(`/liked/${this.id}`, {
                   headers: {
                      Authorization: "Bearer " + localStorage.getItem("token"),
                   },
-               }
-            )
-            .then((res) => {
-               this.isBookmarked = res.data.is_bookmark;
-            });
-      },
-      userLiked() {
-         axios
-            .get(`/liked/${this.id}`, {
-               headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token"),
-               },
-            })
-            .then((res) => {
-               this.isLiked = res.data.is_like;
-            });
+               })
+               .then((res) => {
+                  this.isLiked = res.data.is_like;
+               });
+         }
       },
       getData() {
          axios.get(`/post/${this.id}`).then((res) => {
@@ -440,6 +468,8 @@ export default {
             this.body = res.data.post.body;
             this.imgpath = res.data.post.image_path;
             this.date = res.data.post.created_at;
+            this.writerId = res.data.post.user_id;
+            this.moreFromUserMethod();
             // console.log(this.date);
             // console.log(res.data.user[0].name);
             if (res.data.user[0].bio) {
@@ -517,6 +547,17 @@ export default {
                   }
                )
                .then(() => {
+                  if (!this.isBookmarked) {
+                     this.alertMessage = "Added to your bookmark list.";
+                     this.alertType = "success";
+                     this.showAlert = true;
+                     this.alertTimeOut();
+                  } else {
+                     this.alertMessage = "Removed from your bookmark list.";
+                     this.alertType = "success";
+                     this.showAlert = true;
+                     this.alertTimeOut();
+                  }
                   this.isBookmarked = !this.isBookmarked;
                });
          } else {
@@ -544,8 +585,10 @@ export default {
                   }
                )
                .then(() => {
-                  this.unFollowAlert = true;
-                  this.settimeUnFollow();
+                  this.alertMessage = `You followed ${this.writerName} Sucessfully`;
+                  this.alertType = "success";
+                  this.showAlert = true;
+                  this.alertTimeOut();
                   this.follow = false;
                })
                .finally(() => {
@@ -570,28 +613,16 @@ export default {
                   }
                )
                .then(() => {
-                  this.followAlert = true;
-                  this.settimeFollow();
+                  this.alertMessage = `You followed ${this.writerName} Sucessfully`;
+                  this.alertType = "success";
+                  this.showAlert = true;
                   this.follow = true;
+                  this.alertTimeOut();
                })
                .finally(() => (this.loading = false));
          } else {
             this.dialog = true;
          }
-      },
-      settimeFollow() {
-         setTimeout(() => {
-            this.followAlert = false;
-            // console.log(this.followAlert);
-         }, 1000);
-         // console.log(this.followAlert);
-      },
-      settimeUnFollow() {
-         setTimeout(() => {
-            this.unFollowAlert = false;
-            // console.log(this.followAlert);
-         }, 1000);
-         // console.log(this.followAlert);
       },
    },
 };

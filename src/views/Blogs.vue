@@ -14,21 +14,30 @@
                   hide-delimiters
                   :show-arrows="false"
                >
-                  <v-carousel-item>
-                     <div class="tw-h-full">
-                        <Slider></Slider>
-                     </div>
-                  </v-carousel-item>
-                  <v-carousel-item>
-                     <div class="tw-h-full">
-                        <Slider></Slider>
-                     </div>
-                  </v-carousel-item>
-                  <v-carousel-item>
-                     <div class="tw-h-full">
-                        <Slider></Slider>
-                     </div>
-                  </v-carousel-item>
+                  <div v-if="sliderOne.length == 2">
+                     <v-carousel-item >
+                        <div class="tw-h-full">
+                           <Slider :data="sliderOne"></Slider>
+                        </div>
+                     </v-carousel-item>
+                  </div>
+
+                  <div v-if="sliderTwo.length == 2">
+                     <v-carousel-item>
+                        <div class="tw-h-full tw-w-full">
+                           <Slider :data="sliderTwo"></Slider>
+                        </div>
+                     </v-carousel-item>
+                  </div>
+
+                  <div v-if="sliderThree.length == 2">
+                     <v-carousel-item>
+                        <div class="tw-h-full">
+                           <Slider :data="sliderThree"></Slider>
+                        </div>
+                     </v-carousel-item>
+                  </div>
+
                   <!-- <v-carousel-item >
                   <div class="">
                   <base-card body="hello fsj fsda fsda" :summary="summary" :title="title"></base-card>
@@ -134,7 +143,7 @@
                   </div>
                </v-tab-item>
                <v-tab-item value="recommended">
-                  <div class="tw-mt-4 heightmin tw-px-10">
+                  <div class="tw-mt-4 heightmin ">
                      <horizontal-blog-card
                         v-for="(blog, index) in publishedBlogs"
                         :key="index"
@@ -198,6 +207,9 @@ export default {
          query: "",
          publishedBlogs: [],
          followingBLogs: [],
+         sliderOne: [],
+         sliderTwo: [],
+         sliderThree: [],
       };
    },
 
@@ -223,9 +235,32 @@ export default {
          axios.get("/post/publish").then((res) => {
             if (res.data != "no post is published") {
                this.publishedBlogs = res.data;
-               console.log(this.publishedBlogs)
+               this.slider();
             }
          });
+      },
+      slider() {
+         let length = this.publishedBlogs.length;
+
+         if (length >= 2 && length < 4) {
+            this.sliderOne[0] = this.publishedBlogs[0];
+            this.sliderOne[1] = this.publishedBlogs[1];
+         } else if (length >= 4 && length < 6) {
+            this.sliderOne[0] = this.publishedBlogs[0];
+            this.sliderOne[1] = this.publishedBlogs[1];
+            this.sliderTwo[0] = this.publishedBlogs[2];
+            this.sliderTwo[1] = this.publishedBlogs[3];
+         } else if (length >= 6) {
+            this.sliderOne[0] = this.publishedBlogs[0];
+            this.sliderOne[1] = this.publishedBlogs[1];
+            this.sliderTwo[0] = this.publishedBlogs[2];
+            this.sliderTwo[1] = this.publishedBlogs[3];
+            this.sliderThree[0] = this.publishedBlogs[4];
+            this.sliderThree[1] = this.publishedBlogs[5];
+         }
+         console.log(this.sliderOne);
+         console.log(this.sliderTwo);
+         console.log(this.sliderThree);
       },
       changeTab() {
          this.tab = "recommended";

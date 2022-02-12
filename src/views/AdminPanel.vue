@@ -7,9 +7,11 @@
                <h1 class="tw-font-semibold tw-text-4xl">Admin Panel</h1>
             </div>
             <div class="tw-my-6">
-               <v-tabs color="blaack accent-4"  left>
+               <v-tabs color="blaack accent-4" left>
                   <div class="tw-flex tw-justify-between tw-w-full">
-                     <div class="tw-flex tw-border-b-2 tw-w-full tw-border-gray-300 tw-border-solid">
+                     <div
+                        class="tw-flex tw-border-b-2 tw-w-full tw-border-gray-300 tw-border-solid"
+                     >
                         <v-tab href="#publish" dark class="tw-text-black"
                            ><v-badge color="green" :content="allBlogs.length"
                               >Publish</v-badge
@@ -30,12 +32,13 @@
 
                   <v-tab-item value="users">
                      <div class="tw-w-full tw-my-8 tw-mb-10">
-                        <FollowTab v-for="(user,index) in allUsers"
-                        :key="index"
-                        :userName="user.name"
-                        :profilePicture="user.image_path"
-                        :noOfBlogs="user.posts_count"></FollowTab>
-                        
+                        <FollowTab
+                           v-for="(user, index) in allUsers"
+                           :key="index"
+                           :userName="user.name"
+                           :profilePicture="user.image_path"
+                           :noOfBlogs="user.posts_count"
+                        ></FollowTab>
                      </div>
                   </v-tab-item>
                   <v-tab-item value="publish">
@@ -54,6 +57,7 @@
                   <v-tab-item value="report">
                      <div class="tw-mt-4 tw-w-full">
                         <ReportBar
+                           @blocked-status-change="blockedStatusChange"
                            v-for="(report, index) in allReports"
                            :key="index"
                            :comment="report.comments.body"
@@ -84,7 +88,7 @@ export default {
       return {
          allBlogs: [],
          allReports: [],
-         allUsers:[]
+         allUsers: [],
       };
    },
    created() {
@@ -93,13 +97,19 @@ export default {
       this.getAllUsers();
    },
    methods: {
-      getAllUsers(){
-         axios.get('/ttt',{
-            headers:{
-               Authorization:"Bearer "+localStorage.getItem("token")
-         }}).then((res)=>{
-            this.allUsers=res.data;
-         })
+      getAllUsers() {
+         axios
+            .get("/ttt", {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then((res) => {
+               this.allUsers = res.data;
+            });
+      },
+      blockedStatusChange(){
+         this.getReportedComments();
       },
       getReportedComments() {
          axios
