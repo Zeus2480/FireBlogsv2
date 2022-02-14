@@ -2,9 +2,10 @@
    <div class="tw-h-full">
       <div class="tw-w-full tw-flex tw-h-full">
          <div class="tw-w-1/2  tw-py-4 tw-h-full">
-            <div class="tw-w-full tw-h-full tw-cursor-pointer"  @click="router1" >
+            <div class="tw-w-full tw-h-full "   >
                <div
-                  class="tw-bg-navy-blue tw-rounded-lg tw-h-full tw-flex tw-w-11/12 tw-mx-auto"
+               @click="router1"
+                  class="tw-bg-navy-blue tw-cursor-pointer tw-rounded-lg tw-h-full tw-flex tw-w-11/12 tw-mx-auto"
                >
                   <div class="tw-w-3/5 tw-pl-6 tw-p-3">
                      <div class="title tw-h-2/6 tw-w-full">
@@ -33,9 +34,10 @@
             </div>
          </div>
          <div class="tw-w-1/2  tw-py-4 tw-h-full">
-            <div class="tw-w-full tw-h-full tw-cursor-pointer" @click="router2">
+            <div class="tw-w-full tw-h-full " >
                <div
-                  class="tw-bg-navy-blue tw-rounded-lg tw-h-full tw-flex tw-w-11/12 tw-mx-auto"
+               @click="router2"
+                  class="tw-bg-navy-blue tw-cursor-pointer tw-rounded-lg tw-h-full tw-flex tw-w-11/12 tw-mx-auto"
                >
                   <div class="tw-w-3/5 tw-pl-6 tw-p-3">
                      <div class="title tw-h-2/6 tw-w-full">

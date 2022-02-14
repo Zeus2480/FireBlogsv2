@@ -1,4 +1,4 @@
-uc                          <template>
+<template>
    <div class="contain tw-flex">
       <div class="tw-w-full tw-max-w-xs tw-m-auto tw-shadow-2-yellowshadow">
          <form class="tw-bg-white tw-rounded tw-px-8 tw-pt-4 tw-pb-6 tw-my-4">
@@ -97,7 +97,7 @@ export default {
                .then((response) => {
                   console.log(response.data.access_token);
                   localStorage.setItem("token", response.data.access_token);
-                  this.$router.push({ name: 'home', params: {loggedIn: true }});
+                  this.$router.push({ name: 'blogs', params: {loggedIn: true }});
                })
                .catch((err) => {
                   if (err.response.status === 401) {

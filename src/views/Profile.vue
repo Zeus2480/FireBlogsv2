@@ -10,7 +10,7 @@
             />
             <div class="tw-ml-8 tw-my-auto">
                <h1 class="tw-text-2xl tw-font-medium">{{ userName }}</h1>
-               <p class="tw-opacity-70">328 Followers</p>
+               <p class="tw-opacity-70">{{ userFollowers }} Followers</p>
                <v-btn
                   @click="editprofile"
                   class="tw-mt-1"
@@ -31,13 +31,12 @@
                         >Blogs</v-tab
                      >
                      <v-tab dark href="#followers">Followers</v-tab>
-                     <v-tab dark href="#following">Following</v-tab>
+                     <!-- <v-tab dark href="#following">Following</v-tab> -->
                   </div>
-
                </div>
 
                <v-tab-item value="blogs">
-                  <div v-if="userBlogs.length==0" class="tw-w-full">
+                  <div v-if="userBlogs.length == 0" class="tw-w-full">
                      <div class="tw-flex tw-justify-center tw-mt-24 tw-mx-auto">
                         <div>
                            <h1 class="tw-text-xl">You dont have any blogs</h1>
@@ -68,13 +67,21 @@
                   </div>
                </v-tab-item>
                <v-tab-item value="followers">
-                  <div class="tw-mt-4">
-                     <FollowTab></FollowTab>
-                     <FollowTab></FollowTab>
-                     <FollowTab></FollowTab>
-                     <FollowTab></FollowTab>
-                     <FollowTab></FollowTab>
-                     <FollowTab></FollowTab>
+                  <div class="tw-mt-4" v-if="!folloersList.length">
+                     <div class="tw-flex tw-justify-center tw-mt-24 tw-mx-auto">
+                        <div>
+                           <h1 class="tw-text-xl">You dont have any followers</h1>
+                          
+                        </div>
+                     </div>
+                  </div>
+                  <div v-else class="tw-mt-4">
+                     <FollowTab v-for="(blog,index) in folloersList"
+                     :key="index"
+                     :userName="blog.name"
+                     :profilePicture="blog.image_path"
+                     :noOfBlogs="blog.posts_count"
+                     :noOfFollowers="blog.followers"></FollowTab>
                   </div>
                </v-tab-item>
                <v-tab-item value="following">
@@ -107,6 +114,8 @@ export default {
          userBlogs: [],
          userId: "",
          userName: "",
+         userFollowers: "",
+         folloersList:[]
       };
    },
    computed: {
@@ -120,6 +129,7 @@ export default {
    },
    created() {
       this.getMyBlogs();
+      this.followersDeatails();
    },
    methods: {
       editprofile() {
@@ -127,6 +137,18 @@ export default {
       },
       deleteBlog(id) {
          this.userBlogs = this.userBlogs.filter((blog) => blog.id !== id);
+      },
+      followersDeatails() {
+         axios
+            .get("/t", {
+               headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+               },
+            })
+            .then((res) => {
+               this.folloersList=res.data.followers;
+               console.log(res);
+            });
       },
       getMyBlogs() {
          axios
@@ -142,6 +164,7 @@ export default {
             .then((res) => {
                this.id = res.data.id;
                this.userName = res.data.name;
+               this.userFollowers = res.data.followers;
                axios
                   .get("/post/publish")
                   .then((res) => {

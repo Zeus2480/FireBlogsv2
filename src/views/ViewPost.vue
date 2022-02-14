@@ -23,9 +23,9 @@
          </v-row>
       </div>
       <div
-         class="bottom tw-w-screen tw-h-10 tw-flex tw-fixed tw-bottom-0 tw-z-10 tw-border-black tw-border-t-2"
+         class="bottom tw-w-screen tw-h-10 tw-flex tw-fixed tw-bottom-0 tw-z-10 "
       >
-         <div class="tw-w-3/4 tw-h-full tw-bg-white tw-flex tw-items-center">
+         <div class="tw-w-3/4 tw-h-full tw-bg-white tw-border-gray-200 tw-border-t-2 tw-flex tw-items-center">
             <div class="tw-pl-16 tw-w-full tw-flex tw-justify-between">
                <div class="tw-flex">
                   <div class="tw-flex tw-mr-4">
@@ -104,7 +104,7 @@
             </div>
          </div>
          <div
-            class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-black tw-right-0"
+            class="side tw-relative tw-pb-24 tw-w-1/4 tw-min-h-screen tw-border-l-2 tw-border-solid tw-pt-12 tw-border-gray-200 tw-right-0"
          >
             <div class="tw-p-4 tw-mt-6">
                <div>
@@ -120,7 +120,7 @@
                         {{ writerName }}
                      </h1>
                      <p class="tw-text-sm tw-opacity-70 tw-text-black">
-                        41 Followers
+                        {{ writerFollowers }} Followers
                      </p>
                   </div>
                   <div class="tw-my-auto tw-ml-14">
@@ -169,7 +169,7 @@
                </div>
                <div class="more-from-user tw-mr-2" v-if="moreFromUser.length">
                   <h1 class="tw-font-semibold tw-text-xl">
-                     More From {{writerName}}
+                     More From {{ writerName }}
                   </h1>
                   <MoreFromUser
                      v-for="(blog, index) in moreFromUser"
@@ -264,14 +264,12 @@ export default {
       Comment,
       MoreFromUser,
    },
-   watch:{
-      id(change){
-         this.id=change;
-         
-      }
+   watch: {
+      id(change) {
+         this.id = change;
+      },
    },
    computed: {
-
       profilePictureCheck() {
          if (this.writerImage) {
             return `http://localhost/fireblogs-api/public/images/${this.writerImage}`;
@@ -317,6 +315,7 @@ export default {
          writerInstagram: "",
          writerFacebook: "",
          writerTwitter: "",
+         writerFollowers: "",
          following: null,
          showAlert: null,
          alertMessage: "",
@@ -383,8 +382,8 @@ export default {
          });
       },
       comment() {
-         this.loading = true;
          if (this.$store.getters.userName !== "") {
+            this.loading = true;
             axios
                .post(
                   `/post/${this.id}/comments`,
@@ -472,6 +471,7 @@ export default {
             this.moreFromUserMethod();
             // console.log(this.date);
             // console.log(res.data.user[0].name);
+            this.writerFollowers = res.data.user[0].followers;
             if (res.data.user[0].bio) {
                this.writerBio = res.data.user[0].bio;
             }
@@ -590,6 +590,7 @@ export default {
                   this.showAlert = true;
                   this.alertTimeOut();
                   this.follow = false;
+                  this.writerFollowers--;
                })
                .finally(() => {
                   this.loading = false;
@@ -617,6 +618,7 @@ export default {
                   this.alertType = "success";
                   this.showAlert = true;
                   this.follow = true;
+                  this.writerFollowers++;
                   this.alertTimeOut();
                })
                .finally(() => (this.loading = false));

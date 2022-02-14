@@ -38,6 +38,7 @@
                            :userName="user.name"
                            :profilePicture="user.image_path"
                            :noOfBlogs="user.posts_count"
+                           :noOfFollowers="user.followers"
                         ></FollowTab>
                      </div>
                   </v-tab-item>
@@ -89,6 +90,7 @@ export default {
          allBlogs: [],
          allReports: [],
          allUsers: [],
+         loading:false
       };
    },
    created() {

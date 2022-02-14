@@ -24,7 +24,7 @@
                      Blogs {{ noOfBlogs }}
                   </h2>
                   <h2 class="tw-text-black tw-my-auto tw-mx-6 tw-font-medium">
-                     Followers 466
+                     Followers {{noOfFollowers}}
                   </h2>
                </div>
             </div>

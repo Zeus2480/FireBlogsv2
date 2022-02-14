@@ -15,7 +15,7 @@
                   :show-arrows="false"
                >
                   <div v-if="sliderOne.length == 2">
-                     <v-carousel-item >
+                     <v-carousel-item>
                         <div class="tw-h-full">
                            <Slider :data="sliderOne"></Slider>
                         </div>
@@ -143,7 +143,7 @@
                   </div>
                </v-tab-item>
                <v-tab-item value="recommended">
-                  <div class="tw-mt-4 heightmin ">
+                  <div class="tw-mt-4 heightmin">
                      <horizontal-blog-card
                         v-for="(blog, index) in publishedBlogs"
                         :key="index"
@@ -219,17 +219,19 @@ export default {
    },
    methods: {
       getFollowingBlogs() {
-         axios
-            .get("/tt", {
-               headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token"),
-               },
-            })
-            .then((res) => {
-               if (res.data) {
-                  this.followingBLogs = res.data;
-               }
-            });
+         if (this.$store.getters.userName !== "") {
+            axios
+               .get("/tt", {
+                  headers: {
+                     Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+               })
+               .then((res) => {
+                  if (res.data) {
+                     this.followingBLogs = res.data;
+                  }
+               });
+         }
       },
       getPublishBlogs() {
          axios.get("/post/publish").then((res) => {
