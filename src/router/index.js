@@ -12,6 +12,7 @@ import ViewPost from '../views/ViewPost.vue'
 import Profile from '../views/Profile.vue'
 import Bookmarks from '../views/Bookmarks.vue'
 import EditBlog from '../views/EditBlog.vue'
+import PageNotFound from "../views/PageNotFound.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -84,6 +85,10 @@ const routes = [
     name:'ViewPost',
     component:ViewPost,
     props:true
+  },
+  {
+    path:'*',
+    component:PageNotFound
   },
   {
     path: '/about',
